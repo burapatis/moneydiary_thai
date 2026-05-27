@@ -4,6 +4,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'daos/account_dao.dart';
 import 'daos/category_dao.dart';
 import 'daos/transaction_dao.dart';
+import 'seeders/account_seeder.dart';
 import 'seeders/category_seeder.dart';
 import 'tables/accounts_table.dart';
 import 'tables/categories_table.dart';
@@ -15,15 +16,6 @@ part 'app_database.g.dart';
 
 /// ──────────────────────────────────────────────────
 /// AppDatabase — Main Drift database class
-/// ──────────────────────────────────────────────────
-/// ประกอบด้วย:
-///   - 3 tables (Accounts, Categories, Transactions)
-///   - 3 DAOs (data access objects)
-///   - Migration logic
-///   - Auto-seed default categories ครั้งแรก
-///
-/// Encryption: ใน Batch 2 นี้ยังไม่ encrypt — เปิดใน Batch 8
-/// (sqlcipher จะเพิ่มเมื่อรอบ polish เพราะ test ง่ายกว่าตอนยังไม่ encrypt)
 /// ──────────────────────────────────────────────────
 @DriftDatabase(
   tables: <Type>[
@@ -49,40 +41,31 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (Migrator m) async {
-          // สร้าง tables ทั้งหมด
           await m.createAll();
-
-          // Seed default categories (25 หมวดไทย)
+          // Seed default data: 25 categories + 1 cash account
           await CategorySeeder.seed(this);
+          await AccountSeeder.seedIfEmpty(this);
         },
         onUpgrade: (Migrator m, int from, int to) async {
-          // จะใช้ตอน Phase 2 เมื่อเปลี่ยน schema
-          // ตัวอย่าง:
-          // if (from < 2) {
-          //   await m.addColumn(transactions, transactions.tags);
-          // }
+          // Phase 2 — schema migrations จะใส่ที่นี่
         },
         beforeOpen: (OpeningDetails details) async {
           // เปิด foreign keys (drift ปิด default)
           await customStatement('PRAGMA foreign_keys = ON');
 
-          // ตรวจสอบว่ามี default categories แล้วหรือยัง
-          // กรณีถ้ามี user ที่ migrate มาจาก version เก่าแบบไม่มี seeder
+          // Safety net — ถ้าด้วยเหตุผลใดก็ตาม seed ไม่ทำงานตอน onCreate
           final int categoryCount = await categoryDao.count();
           if (categoryCount == 0) {
             await CategorySeeder.seed(this);
           }
+          await AccountSeeder.seedIfEmpty(this);
         },
       );
 }
 
-/// เชื่อมต่อ DB จริง (production)
-/// drift_flutter จัดการ path provider ให้อัตโนมัติ
 QueryExecutor _openConnection() {
   return driftDatabase(
     name: 'moneydiary',
-    native: const DriftNativeOptions(
-      // databasePath ส่วนนี้จะใช้ default ที่ปลอดภัย (app documents dir)
-    ),
+    native: const DriftNativeOptions(),
   );
 }

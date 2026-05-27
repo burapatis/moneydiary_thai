@@ -1,54 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/transaction/presentation/widgets/quick_add_sheet.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../extensions/build_context_extensions.dart';
 
 /// ──────────────────────────────────────────────────
 /// MainScaffold — Bottom Navigation พร้อม FAB กลาง
 /// ──────────────────────────────────────────────────
-/// ตาม Design Spec §2.2 — 4 tabs + FAB ตรงกลาง
-/// FAB เปิด Quick-Add bottom sheet (จะเชื่อมต่อ Batch 3)
-/// ──────────────────────────────────────────────────
 class MainScaffold extends StatelessWidget {
   const MainScaffold({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
-  /// เปลี่ยน tab โดย preserve state
   void _goToBranch(int index) {
     navigationShell.goBranch(
       index,
-      // initialLocation ถ้ากด tab เดิมซ้ำ จะกลับไปหน้าแรกของ stack
       initialLocation: index == navigationShell.currentIndex,
     );
   }
 
-  /// เปิด Quick-Add Bottom Sheet
-  /// TODO(batch-3): เชื่อมต่อ Quick-Add Screen จริงใน Batch 3
+  /// เปิด Quick-Add Bottom Sheet (Batch 3 — ของจริงแล้ว!)
   void _openQuickAdd(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.9,
-        minChildSize: 0.4,
-        expand: false,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            padding: const EdgeInsets.all(24),
-            child: Center(
-              child: Text(
-                'Quick-Add Bottom Sheet\n(จะ implement ใน Batch 3)',
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodyLarge,
-              ),
-            ),
-          );
-        },
-      ),
-    );
+    QuickAddSheet.show(context);
   }
 
   @override
@@ -58,16 +32,12 @@ class MainScaffold extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-
-      // ─── FAB ตรงกลางสำหรับ Quick-Add ───
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openQuickAdd(context),
         tooltip: l10n.commonAdd,
         child: const Icon(Icons.add, size: 28),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      // ─── BottomAppBar เปิดช่อง FAB กลาง ───
       bottomNavigationBar: BottomAppBar(
         height: 64,
         notchMargin: 8,
@@ -90,7 +60,7 @@ class MainScaffold extends StatelessWidget {
               isActive: currentIndex == 1,
               onTap: () => _goToBranch(1),
             ),
-            const SizedBox(width: 64), // ช่องว่างสำหรับ FAB
+            const SizedBox(width: 64),
             _NavBarItem(
               icon: Icons.list_alt_outlined,
               activeIcon: Icons.list_alt,
@@ -112,7 +82,6 @@ class MainScaffold extends StatelessWidget {
   }
 }
 
-/// Item เดี่ยวใน BottomAppBar
 class _NavBarItem extends StatelessWidget {
   const _NavBarItem({
     required this.icon,
@@ -131,14 +100,12 @@ class _NavBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color activeColor = context.colors.primary;
-    final Color inactiveColor = context.isDarkMode
-        ? Colors.white60
-        : Colors.black54;
+    final Color inactiveColor =
+        context.isDarkMode ? Colors.white60 : Colors.black54;
 
     return Expanded(
       child: InkWell(
         onTap: onTap,
-        // Semantic label สำหรับ screen reader
         child: Semantics(
           label: label,
           selected: isActive,
