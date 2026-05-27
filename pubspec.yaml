@@ -1,0 +1,115 @@
+name: moneydiary_thai
+description: "สมุดบันทึกเงินวิถีไทย — บันทึกรายรับ-รายจ่ายส่วนบุคคล แบบ Offline-first"
+# ป้องกันการ publish โดยไม่ตั้งใจ
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # i18n: Flutter localization (รองรับไทย + อังกฤษ)
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.1
+
+  # State Management: Riverpod 2.x type-safe + reactive
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Routing: Declarative, deep-link ready
+  go_router: ^14.6.1
+
+  # Local Database: Drift (type-safe SQL) + SQLite + Encryption
+  drift: ^2.21.0
+  drift_flutter: ^0.2.2
+  sqlite3_flutter_libs: ^0.5.26
+  # SQLCipher สำหรับ encrypt ฐานข้อมูล (เพิ่มใน Batch 2)
+  # sqlcipher_flutter_libs: ^0.6.5
+  path_provider: ^2.1.5
+  path: ^1.9.0
+
+  # Secure Storage: Keychain (iOS) / Keystore (Android)
+  flutter_secure_storage: ^9.2.2
+
+  # SharedPreferences สำหรับ settings ที่ไม่ sensitive
+  shared_preferences: ^2.3.4
+
+  # Environment variables (โหลดจาก .env ไฟล์)
+  flutter_dotenv: ^5.2.1
+
+  # Charts: รายงาน pie/bar/line
+  fl_chart: ^0.69.2
+
+  # SVG rendering สำหรับ icons
+  flutter_svg: ^2.0.10+1
+
+  # Notifications แบบ local (ไม่ต้องพึ่ง server)
+  flutter_local_notifications: ^17.2.4
+
+  # Home Screen Widget สำหรับ iOS + Android
+  # home_widget: ^0.7.0  # เปิดใช้ใน Batch 6
+
+  # File handling สำหรับ CSV import/export
+  file_picker: ^8.1.6
+  csv: ^6.0.0
+  share_plus: ^10.1.2
+
+  # UUID สำหรับ generate primary keys
+  uuid: ^4.5.1
+
+  # Utility: equatable สำหรับ value comparison
+  equatable: ^2.0.7
+
+  # Currency input formatter
+  flutter_masked_text2: ^0.9.1
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  # Linting + Code Quality
+  flutter_lints: ^5.0.0
+
+  # Code Generation
+  build_runner: ^2.4.13
+  drift_dev: ^2.21.0
+  riverpod_generator: ^2.6.3
+  custom_lint: ^0.7.0
+  riverpod_lint: ^2.6.3
+
+  # Testing
+  mocktail: ^1.0.4
+
+# Configure Flutter assets และ fonts
+flutter:
+  uses-material-design: true
+  generate: true   # เปิดใช้ flutter_localizations gen
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - .env
+
+  # ฟอนต์ Sarabun รองรับไทย+อังกฤษ
+  # หมายเหตุ: ดาวน์โหลดจาก https://fonts.google.com/specimen/Sarabun
+  # แล้วใส่ในโฟลเดอร์ assets/fonts/ (SETUP.md อธิบายไว้)
+  fonts:
+    - family: Sarabun
+      fonts:
+        - asset: assets/fonts/Sarabun-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Sarabun-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Sarabun-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Sarabun-Bold.ttf
+          weight: 700

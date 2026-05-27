@@ -1,0 +1,94 @@
+# ──────────────────────────
+# Flutter / Dart
+# ──────────────────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+.metadata
+pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Generated files (drift, riverpod, freezed)
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+lib/l10n/gen/
+
+# Coverage
+coverage/
+test/.test_coverage.dart
+
+# ──────────────────────────
+# Secrets — ห้าม commit
+# ──────────────────────────
+.env
+.env.local
+.env.development
+.env.production
+!.env.example
+
+# Firebase config (sensitive)
+ios/Runner/GoogleService-Info.plist
+android/app/google-services.json
+lib/firebase_options.dart
+
+# Signing keys
+**/key.properties
+**/upload-keystore.jks
+**/*.keystore
+**/*.jks
+ios/Runner.xcodeproj/project.pbxproj.bak
+
+# ──────────────────────────
+# iOS
+# ──────────────────────────
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Pods/
+**/ios/.symlinks/
+**/Podfile.lock
+
+# ──────────────────────────
+# Android
+# ──────────────────────────
+**/android/**/gradle-wrapper.jar
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+
+# ──────────────────────────
+# Mac
+# ──────────────────────────
+.DS_Store
+*.swp
+*.bak
+
+# ──────────────────────────
+# Logs
+# ──────────────────────────
+*.log
+flutter_*.log
