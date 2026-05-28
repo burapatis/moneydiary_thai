@@ -10,12 +10,12 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../../../services/database/database_providers.dart';
 import '../../../account/domain/entities/account.dart';
 import '../../../account/presentation/providers/account_providers.dart';
 import '../../../category/domain/entities/category.dart';
 import '../../../category/presentation/providers/category_providers.dart';
 import '../../domain/entities/transaction.dart';
-import '../../../../services/database/database_providers.dart';
 import '../providers/transaction_providers.dart';
 import 'account_selector.dart';
 import 'category_chip.dart';
@@ -147,10 +147,22 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                         : l10n.transactionEditTitle,
                     style: context.textTheme.titleLarge,
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.of(context).pop(),
-                    tooltip: l10n.commonCancel,
+                  Row(
+                    children: <Widget>[
+                      // Delete button (เฉพาะ edit mode)
+                      if (widget.editingTransaction != null)
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline),
+                          color: AppColors.danger,
+                          onPressed: _confirmDelete,
+                          tooltip: l10n.commonDelete,
+                        ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                        tooltip: l10n.commonCancel,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -594,6 +606,65 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
       messenger.showSnackBar(
         SnackBar(
           content: Text(failure?.message ?? l10n.commonError),
+          backgroundColor: AppColors.danger,
+        ),
+      );
+    }
+  }
+
+  /// ────────────────
+  /// Delete action — เฉพาะ edit mode
+  /// ────────────────
+  Future<void> _confirmDelete() async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          title: Text(l10n.transactionDeleteConfirm),
+          content: Text(l10n.transactionDeleteConfirmMessage),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(l10n.commonCancel),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.danger,
+              ),
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(l10n.commonDelete),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final NavigatorState nav = Navigator.of(context);
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    final repo = ref.read(transactionRepositoryProvider);
+
+    final Result<void> result =
+        await repo.delete(widget.editingTransaction!.id);
+
+    if (!mounted) return;
+
+    if (result.isSuccess) {
+      HapticFeedback.lightImpact();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.transactionDeletedSuccess),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      nav.pop();
+    } else {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(result.failureOrNull?.message ?? l10n.commonError),
           backgroundColor: AppColors.danger,
         ),
       );
