@@ -6,6 +6,15 @@ import 'package:moneydiary_thai/services/database/app_database.dart';
 
 import '../../../helpers/test_database.dart';
 
+/// ──────────────────────────────────────────────────
+/// Updated Tests สำหรับ AccountRepository
+/// ──────────────────────────────────────────────────
+/// หมายเหตุ: ตั้งแต่ Batch 3 — AppDatabase auto-seed "เงินสด" ตอน open
+/// ดังนั้น test ต้อง:
+///   - บวก 1 จาก expected (เพราะมี เงินสด default)
+///   - หรือ ลบ default ออกก่อน assert
+/// ──────────────────────────────────────────────────
+
 void main() {
   late AppDatabase db;
   late AccountRepositoryImpl repo;
@@ -45,12 +54,13 @@ void main() {
   group('AccountRepository', () {
     group('create', () {
       test('should create account and return with generated id', () async {
-        final Result<Account> result = await repo.create(makeAccount(name: 'เงินสด'));
+        final Result<Account> result =
+            await repo.create(makeAccount(name: 'บัญชีใหม่'));
 
         expect(result.isSuccess, true);
         final Account created = result.dataOrNull!;
         expect(created.id.isNotEmpty, true);
-        expect(created.name, 'เงินสด');
+        expect(created.name, 'บัญชีใหม่');
       });
 
       test('should use provided id if not empty', () async {
@@ -80,21 +90,27 @@ void main() {
     });
 
     group('getAll', () {
-      test('should return empty when no accounts', () async {
+      // หมายเหตุ: หลัง Batch 3 — DB จะมี "เงินสด" default 1 บัญชี
+      test('should return only seeded default account when no user accounts',
+          () async {
         final Result<List<Account>> result = await repo.getAll();
 
         expect(result.isSuccess, true);
-        expect(result.dataOrNull, isEmpty);
+        // มี seeded "เงินสด" 1 ตัว (ไม่ใช่ empty อีกต่อไป)
+        expect(result.dataOrNull?.length, 1);
+        expect(result.dataOrNull?.first.name, 'เงินสด');
       });
 
-      test('should return all non-archived accounts', () async {
+      test('should return all non-archived accounts (including default)',
+          () async {
         await repo.create(makeAccount(name: 'A'));
         await repo.create(makeAccount(name: 'B'));
         await repo.create(makeAccount(name: 'C'));
 
         final Result<List<Account>> result = await repo.getAll();
 
-        expect(result.dataOrNull?.length, 3);
+        // 3 user + 1 default = 4
+        expect(result.dataOrNull?.length, 4);
       });
 
       test('should exclude archived by default', () async {
@@ -104,8 +120,8 @@ void main() {
 
         final Result<List<Account>> result = await repo.getAll();
 
-        expect(result.dataOrNull?.length, 1);
-        expect(result.dataOrNull?.first.name, 'B');
+        // 1 user (B) + 1 default (เงินสด) = 2  (A ถูก archive)
+        expect(result.dataOrNull?.length, 2);
       });
 
       test('should include archived when requested', () async {
@@ -116,13 +132,15 @@ void main() {
         final Result<List<Account>> result =
             await repo.getAll(includeArchived: true);
 
-        expect(result.dataOrNull?.length, 2);
+        // 2 user (A archived + B) + 1 default = 3
+        expect(result.dataOrNull?.length, 3);
       });
     });
 
     group('update', () {
       test('should update name', () async {
-        final Account created = (await repo.create(makeAccount(name: 'Old'))).dataOrNull!;
+        final Account created =
+            (await repo.create(makeAccount(name: 'Old'))).dataOrNull!;
         final Account modified = created.copyWith(name: 'New');
 
         final Result<Account> result = await repo.update(modified);
