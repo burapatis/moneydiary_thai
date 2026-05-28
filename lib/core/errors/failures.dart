@@ -3,6 +3,12 @@ import 'package:equatable/equatable.dart';
 /// ──────────────────────────────────────────────────
 /// Failure — Base class สำหรับ business logic errors
 /// ──────────────────────────────────────────────────
+/// ใน Clean Architecture เราใช้ Either<Failure, T> หรือ Result pattern
+/// แทนการ throw exception ใน domain/data layer
+/// เพื่อให้ caller รู้ชัดว่ามี error ที่ handle ได้
+///
+/// ใน MVP ใช้ pattern ง่ายๆ — Result class
+/// ──────────────────────────────────────────────────
 sealed class Failure extends Equatable {
   const Failure({required this.message, this.code});
 
@@ -51,6 +57,11 @@ final class PermissionFailure extends Failure {
   const PermissionFailure({required super.message, super.code});
 }
 
+/// ปัญหาเกี่ยวกับไฟล์ (CSV export/import, backup)
+final class FileFailure extends Failure {
+  const FileFailure({required super.message, super.code});
+}
+
 /// ไม่คาดคิด - catch-all
 final class UnknownFailure extends Failure {
   const UnknownFailure({required super.message, super.code});
@@ -65,9 +76,6 @@ final class UnknownFailure extends Failure {
 ///     case Success(:final data): // ...
 ///     case ResultFailure(:final failure): // ...
 ///   }
-///
-/// 🔧 FIX: เปลี่ยนจาก static method เป็น factory constructor
-/// เพื่อให้ใช้ Result<Transaction>.success(...) ได้
 /// ──────────────────────────────────────────────────
 sealed class Result<T> {
   const Result();

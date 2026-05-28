@@ -36,6 +36,9 @@ dependencies:
   # Secure Storage: Keychain (iOS) / Keystore (Android)
   flutter_secure_storage: ^9.2.2
 
+  # Biometric authentication (Face ID / Touch ID / Fingerprint)
+  local_auth: ^2.3.0
+
   # SharedPreferences สำหรับ settings ที่ไม่ sensitive
   shared_preferences: ^2.3.4
 
