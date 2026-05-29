@@ -181,7 +181,7 @@
   "settingsBiometricSub": "ยืนยันตัวตนทุกครั้งที่เปิดแอป",
   "settingsBiometricUnavailable": "อุปกรณ์นี้ไม่รองรับ",
   "settingsBiometricFailed": "ยืนยันตัวตนไม่สำเร็จ",
-  "settingsVersionValue": "0.1.0 (MVP)",
+  "settingsVersionValue": "1.0.0",
   "settingsPrivacySub": "ข้อมูลเก็บในเครื่องเท่านั้น",
   "settingsExportSuccess": "ส่งออกสำเร็จ",
   "settingsExportFailed": "ส่งออกล้มเหลว",

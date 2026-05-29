@@ -165,7 +165,7 @@
   "settingsBiometricSub": "Verify identity every time you open the app",
   "settingsBiometricUnavailable": "Not supported on this device",
   "settingsBiometricFailed": "Authentication failed",
-  "settingsVersionValue": "0.1.0 (MVP)",
+  "settingsVersionValue": "1.0.0",
   "settingsPrivacySub": "Data stored on device only",
   "settingsExportSuccess": "Export successful",
   "settingsExportFailed": "Export failed",

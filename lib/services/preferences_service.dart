@@ -9,9 +9,6 @@ import '../core/constants/app_constants.dart';
 /// ──────────────────────────────────────────────────
 /// ใช้ SharedPreferences สำหรับ settings ที่ไม่ sensitive
 /// (theme, locale, onboarding_done, analytics_opt_in)
-///
-/// สำหรับข้อมูล sensitive (encryption keys) ใช้ flutter_secure_storage
-/// ใน Batch 2 จะเพิ่ม
 /// ──────────────────────────────────────────────────
 
 /// Override ใน main.dart หลังจาก initialize

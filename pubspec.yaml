@@ -1,8 +1,8 @@
 name: moneydiary_thai
-description: "สมุดบันทึกเงินวิถีไทย — บันทึกรายรับ-รายจ่ายส่วนบุคคล แบบ Offline-first"
+description: "MoneyDiary Thai — สมุดบันทึกเงินวิถีไทย บันทึกรายรับ-รายจ่าย ออฟไลน์ ส่วนตัว ปลอดภัย"
 # ป้องกันการ publish โดยไม่ตั้งใจ
 publish_to: 'none'
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ^3.6.0
@@ -33,9 +33,6 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.0
 
-  # Secure Storage: Keychain (iOS) / Keystore (Android)
-  flutter_secure_storage: ^9.2.2
-
   # Biometric authentication (Face ID / Touch ID / Fingerprint)
   local_auth: ^2.3.0
 
@@ -51,11 +48,8 @@ dependencies:
   # SVG rendering สำหรับ icons
   flutter_svg: ^2.0.10+1
 
-  # Notifications แบบ local (ไม่ต้องพึ่ง server)
-  flutter_local_notifications: ^17.2.4
-
   # Home Screen Widget สำหรับ iOS + Android
-  # home_widget: ^0.7.0  # เปิดใช้ใน Batch 6
+  # home_widget: ^0.7.0  # เพิ่มใน v1.1 (Batch 6)
 
   # File handling สำหรับ CSV import/export
   file_picker: ^8.1.6
