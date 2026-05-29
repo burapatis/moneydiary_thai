@@ -10,6 +10,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/icon_resolver.dart';
 import '../../../../core/widgets/pickers/color_picker.dart';
 import '../../../../core/widgets/pickers/icon_picker.dart';
+import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/database/database_providers.dart';
 import '../../domain/entities/account.dart';
 
@@ -70,18 +71,19 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final bool isNew = widget.editing == null;
     final Color tintColor = ColorParser.parse(_selectedColor);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isNew ? 'สร้างบัญชีใหม่' : 'แก้ไขบัญชี'),
+        title: Text(isNew ? l10n.accountNew : l10n.accountEdit),
         actions: <Widget>[
           if (!isNew)
             IconButton(
               icon: const Icon(Icons.archive_outlined),
               onPressed: _confirmArchive,
-              tooltip: 'เก็บถาวร',
+              tooltip: l10n.accountArchive,
             ),
         ],
       ),
@@ -94,12 +96,12 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // ชื่อบัญชี
-            _buildLabel('ชื่อบัญชี'),
+            _buildLabel(l10n.accountName),
             const SizedBox(height: AppSpacing.xs),
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                hintText: 'เช่น K PLUS, SCB Easy, เงินสด',
+              decoration: InputDecoration(
+                hintText: l10n.accountNameHint,
               ),
               maxLength: 60,
               textInputAction: TextInputAction.next,
@@ -108,13 +110,13 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
             const SizedBox(height: AppSpacing.md),
 
             // ประเภทบัญชี
-            _buildLabel('ประเภท'),
+            _buildLabel(l10n.accountType),
             const SizedBox(height: AppSpacing.sm),
             _buildTypeSelector(),
             const SizedBox(height: AppSpacing.md),
 
             // ยอดเริ่มต้น
-            _buildLabel('ยอดเริ่มต้น'),
+            _buildLabel(l10n.accountInitialBalance),
             const SizedBox(height: AppSpacing.xs),
             TextField(
               controller: _initialBalanceController,
@@ -131,7 +133,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // Icon picker
-            _buildLabel('เลือกไอคอน'),
+            _buildLabel(l10n.pickerChooseIcon),
             const SizedBox(height: AppSpacing.sm),
             IconPicker(
               selectedIcon: _selectedIcon,
@@ -142,7 +144,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // Color picker
-            _buildLabel('เลือกสี'),
+            _buildLabel(l10n.pickerChooseColor),
             const SizedBox(height: AppSpacing.sm),
             AppColorPicker(
               selectedColor: _selectedColor,
@@ -159,7 +161,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('บันทึก'),
+                  : Text(l10n.commonSave),
             ),
             const SizedBox(height: AppSpacing.xxl),
           ],

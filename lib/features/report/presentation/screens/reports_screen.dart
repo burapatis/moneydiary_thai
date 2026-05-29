@@ -180,7 +180,7 @@ class ReportsScreen extends ConsumerWidget {
         // Pie chart section
         if (report.totalExpense > 0) ...<Widget>[
           Text(
-            'รายจ่ายตามหมวด',
+            AppLocalizations.of(context).reportsExpenseByCategory,
             style: context.textTheme.titleMedium,
           ),
           const SizedBox(height: AppSpacing.md),
@@ -214,7 +214,7 @@ class ReportsScreen extends ConsumerWidget {
                 Expanded(
                   child: _miniStat(
                     context,
-                    label: 'รายรับ',
+                    label: AppLocalizations.of(context).homeIncome,
                     value: report.totalIncome,
                     color: AppColors.success,
                   ),
@@ -227,7 +227,7 @@ class ReportsScreen extends ConsumerWidget {
                 Expanded(
                   child: _miniStat(
                     context,
-                    label: 'รายจ่าย',
+                    label: AppLocalizations.of(context).homeExpense,
                     value: report.totalExpense,
                     color: AppColors.danger,
                   ),
@@ -238,7 +238,8 @@ class ReportsScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text('คงเหลือ', style: context.textTheme.bodyLarge),
+                Text(AppLocalizations.of(context).homeBalance,
+                    style: context.textTheme.bodyLarge),
                 Text(
                   Formatters.formatCurrency(report.net),
                   style: context.textTheme.titleLarge?.copyWith(
@@ -345,7 +346,7 @@ class ReportsScreen extends ConsumerWidget {
                         size: 18, color: context.colors.primary),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
-                      'ข้อมูลน่าสนใจ',
+                      AppLocalizations.of(context).reportsInsightTitle,
                       style: context.textTheme.titleSmall?.copyWith(
                         color: context.colors.primary,
                       ),
@@ -393,7 +394,7 @@ class ReportsScreen extends ConsumerWidget {
               size: 80, color: context.colors.outline),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'ยังไม่มีข้อมูลในช่วงนี้',
+            AppLocalizations.of(context).reportsNoData,
             style: context.textTheme.titleMedium,
           ),
           const SizedBox(height: AppSpacing.xs),

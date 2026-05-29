@@ -9,6 +9,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/icon_resolver.dart';
 import '../../../../core/widgets/pickers/color_picker.dart';
 import '../../../../core/widgets/pickers/icon_picker.dart';
+import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/database/database_providers.dart';
 import '../../domain/entities/category.dart';
 
@@ -83,19 +84,20 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final bool isNew = widget.editing == null;
     final Color tintColor = ColorParser.parse(_selectedColor);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isNew ? 'สร้างหมวดใหม่' : 'แก้ไขหมวด'),
+        title: Text(isNew ? l10n.categoryNew : l10n.categoryEdit),
         actions: <Widget>[
           if (!isNew && !(widget.editing?.isDefault ?? false))
             IconButton(
               icon: const Icon(Icons.delete_outline),
               color: AppColors.danger,
               onPressed: _confirmDelete,
-              tooltip: 'ลบ',
+              tooltip: l10n.commonDelete,
             ),
         ],
       ),
@@ -108,12 +110,12 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // ชื่อภาษาไทย
-            _buildLabel('ชื่อภาษาไทย'),
+            _buildLabel(l10n.categoryNameTh),
             const SizedBox(height: AppSpacing.xs),
             TextField(
               controller: _nameThController,
-              decoration: const InputDecoration(
-                hintText: 'เช่น ค่ากาแฟ',
+              decoration: InputDecoration(
+                hintText: l10n.categoryNameThHint,
               ),
               maxLength: 60,
               textInputAction: TextInputAction.next,
@@ -122,12 +124,12 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
             const SizedBox(height: AppSpacing.md),
 
             // ชื่อภาษาอังกฤษ
-            _buildLabel('ชื่อภาษาอังกฤษ (English)'),
+            _buildLabel(l10n.categoryNameEn),
             const SizedBox(height: AppSpacing.xs),
             TextField(
               controller: _nameEnController,
-              decoration: const InputDecoration(
-                hintText: 'e.g. Coffee',
+              decoration: InputDecoration(
+                hintText: l10n.categoryNameEnHint,
               ),
               maxLength: 60,
               onChanged: (_) => setState(() {}),
@@ -135,7 +137,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // Icon picker
-            _buildLabel('เลือกไอคอน'),
+            _buildLabel(l10n.pickerChooseIcon),
             const SizedBox(height: AppSpacing.sm),
             IconPicker(
               selectedIcon: _selectedIcon,
@@ -146,7 +148,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // Color picker
-            _buildLabel('เลือกสี'),
+            _buildLabel(l10n.pickerChooseColor),
             const SizedBox(height: AppSpacing.sm),
             AppColorPicker(
               selectedColor: _selectedColor,
@@ -164,7 +166,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('บันทึก'),
+                  : Text(l10n.commonSave),
             ),
             const SizedBox(height: AppSpacing.xxl),
           ],

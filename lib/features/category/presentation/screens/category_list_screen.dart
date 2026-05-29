@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/icon_resolver.dart';
+import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/database/database_providers.dart';
 import '../../domain/entities/category.dart';
 import 'category_edit_screen.dart';
@@ -49,14 +50,15 @@ class _CategoryListScreenState extends ConsumerState<CategoryListScreen>
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('จัดการหมวด'),
+        title: Text(l10n.categoryManageTitle),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const <Widget>[
-            Tab(text: 'รายจ่าย'),
-            Tab(text: 'รายรับ'),
+          tabs: <Widget>[
+            Tab(text: l10n.homeExpense),
+            Tab(text: l10n.homeIncome),
           ],
         ),
       ),
@@ -75,7 +77,7 @@ class _CategoryListScreenState extends ConsumerState<CategoryListScreen>
           CategoryEditScreen.show(context, type: currentType);
         },
         icon: const Icon(Icons.add),
-        label: const Text('เพิ่มหมวด'),
+        label: Text(l10n.categoryAddButton),
       ),
     );
   }
@@ -98,7 +100,7 @@ class _CategoryListTab extends ConsumerWidget {
     return categoriesAsync.when(
       data: (List<Category> categories) {
         if (categories.isEmpty) {
-          return const Center(child: Text('ยังไม่มีหมวด'));
+          return Center(child: Text(AppLocalizations.of(context).categoryEmpty));
         }
 
         return ListView.separated(
@@ -174,7 +176,7 @@ class _CategoryListItem extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                'เริ่มต้น',
+                AppLocalizations.of(context).categoryDefault,
                 style: context.textTheme.labelSmall,
               ),
             ),

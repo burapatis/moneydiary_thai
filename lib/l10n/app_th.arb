@@ -123,5 +123,85 @@
   "onboardingPrivacyBullet4": "เข้ารหัสด้วย AES-256",
   "onboardingAnalyticsConsent": "ส่งข้อมูลใช้งานแบบไม่ระบุตัวตน?\n(เปลี่ยนได้ใน Settings)",
   "onboardingStart": "เริ่มกันเลย",
-  "onboardingGetStarted": "เริ่มใช้งาน"
+  "onboardingGetStarted": "เริ่มใช้งาน",
+
+  "_batch8Section": "═══ Batch 8 i18n ═══",
+
+  "categoryNew": "สร้างหมวดใหม่",
+  "categoryEdit": "แก้ไขหมวด",
+  "categoryNameTh": "ชื่อภาษาไทย",
+  "categoryNameEn": "ชื่อภาษาอังกฤษ (English)",
+  "categoryNameThHint": "เช่น ค่ากาแฟ",
+  "categoryNameEnHint": "e.g. Coffee",
+  "categoryNamePlaceholder": "ชื่อหมวด",
+  "categoryDeleteConfirm": "ลบหมวดนี้?",
+  "categoryDeleteMessage": "รายการที่ใช้หมวดนี้จะยังคงอยู่ แต่ต้องเปลี่ยนหมวดใหม่",
+  "categoryDeleteFailed": "ลบไม่ได้",
+  "categoryManageTitle": "จัดการหมวด",
+  "categoryAddButton": "เพิ่มหมวด",
+  "categoryDefault": "เริ่มต้น",
+  "categoryEmpty": "ยังไม่มีหมวด",
+
+  "accountNew": "สร้างบัญชีใหม่",
+  "accountEdit": "แก้ไขบัญชี",
+  "accountName": "ชื่อบัญชี",
+  "accountNameHint": "เช่น K PLUS, SCB Easy, เงินสด",
+  "accountNamePlaceholder": "ชื่อบัญชี",
+  "accountType": "ประเภท",
+  "accountInitialBalance": "ยอดเริ่มต้น",
+  "accountManageTitle": "จัดการบัญชี",
+  "accountAddButton": "เพิ่มบัญชี",
+  "accountEmpty": "ยังไม่มีบัญชี",
+  "accountArchive": "เก็บถาวร",
+  "accountArchiveConfirm": "เก็บถาวรบัญชีนี้?",
+  "accountArchiveMessage": "บัญชีนี้จะถูกซ่อนจาก list หลัก แต่ข้อมูลยังอยู่ครบถ้วน",
+  "accountArchived": "เก็บถาวรแล้ว",
+  "accountTypeCash": "เงินสด",
+  "accountTypeBank": "ธนาคาร",
+  "accountTypeEwallet": "E-Wallet",
+  "accountTypeCredit": "บัตรเครดิต",
+  "accountTypeOther": "อื่นๆ",
+
+  "pickerChooseIcon": "เลือกไอคอน",
+  "pickerChooseColor": "เลือกสี",
+
+  "commonSaved": "บันทึกแล้ว",
+  "commonDeleted": "ลบแล้ว",
+
+  "settingsSectionDisplay": "การแสดงผล",
+  "settingsSectionAccountCategory": "บัญชีและหมวด",
+  "settingsSectionDataBackup": "ข้อมูลและสำรอง",
+  "settingsSectionSecurity": "ความปลอดภัย",
+  "settingsAccountManage": "จัดการบัญชี",
+  "settingsAccountManageSub": "เพิ่ม / แก้ไข / เก็บถาวร",
+  "settingsCategoryManage": "จัดการหมวด",
+  "settingsCategoryManageSub": "หมวดเริ่มต้น + สร้างเอง",
+  "settingsExportSub": "บันทึกไฟล์ / แชร์ / สำรอง",
+  "settingsImportSub": "กู้คืนจากไฟล์สำรอง",
+  "settingsBiometricSub": "ยืนยันตัวตนทุกครั้งที่เปิดแอป",
+  "settingsBiometricUnavailable": "อุปกรณ์นี้ไม่รองรับ",
+  "settingsBiometricFailed": "ยืนยันตัวตนไม่สำเร็จ",
+  "settingsVersionValue": "0.1.0 (MVP)",
+  "settingsPrivacySub": "ข้อมูลเก็บในเครื่องเท่านั้น",
+  "settingsExportSuccess": "ส่งออกสำเร็จ",
+  "settingsExportFailed": "ส่งออกล้มเหลว",
+  "settingsImportFailed": "นำเข้าล้มเหลว",
+  "settingsImportSuccess": "นำเข้า {count} รายการสำเร็จ",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsChooseTheme": "เลือกธีม",
+  "settingsChooseLanguage": "เลือกภาษา",
+
+  "reportsExpenseByCategory": "รายจ่ายตามหมวด",
+  "reportsTotalExpense": "รวมรายจ่าย",
+  "reportsInsightTitle": "ข้อมูลน่าสนใจ",
+  "reportsItems": "{count} รายการ",
+  "@reportsItems": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

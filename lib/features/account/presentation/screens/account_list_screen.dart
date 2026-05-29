@@ -5,6 +5,7 @@ import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/icon_resolver.dart';
+import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/database/database_providers.dart';
 import '../../../transaction/presentation/providers/transaction_providers.dart';
 import '../../domain/entities/account.dart';
@@ -32,7 +33,7 @@ class AccountListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('จัดการบัญชี'),
+        title: Text(AppLocalizations.of(context).accountManageTitle),
       ),
       body: accountsAsync.when(
         data: (List<Account> accounts) {
@@ -57,7 +58,7 @@ class AccountListScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => AccountEditScreen.show(context),
         icon: const Icon(Icons.add),
-        label: const Text('เพิ่มบัญชี'),
+        label: Text(AppLocalizations.of(context).accountAddButton),
       ),
     );
   }
@@ -74,7 +75,7 @@ class AccountListScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'ยังไม่มีบัญชี',
+            AppLocalizations.of(context).accountEmpty,
             style: context.textTheme.titleMedium,
           ),
         ],

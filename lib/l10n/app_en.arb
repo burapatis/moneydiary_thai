@@ -109,5 +109,83 @@
   "onboardingPrivacyBullet4": "Encrypted with AES-256",
   "onboardingAnalyticsConsent": "Send anonymous usage data?\n(Change anytime in Settings)",
   "onboardingStart": "Get Started",
-  "onboardingGetStarted": "Start Using"
+  "onboardingGetStarted": "Start Using",
+
+  "categoryNew": "New Category",
+  "categoryEdit": "Edit Category",
+  "categoryNameTh": "Thai Name",
+  "categoryNameEn": "English Name",
+  "categoryNameThHint": "e.g. Coffee",
+  "categoryNameEnHint": "e.g. Coffee",
+  "categoryNamePlaceholder": "Category name",
+  "categoryDeleteConfirm": "Delete this category?",
+  "categoryDeleteMessage": "Transactions using this category will remain but need a new category",
+  "categoryDeleteFailed": "Cannot delete",
+  "categoryManageTitle": "Manage Categories",
+  "categoryAddButton": "Add Category",
+  "categoryDefault": "Default",
+  "categoryEmpty": "No categories yet",
+
+  "accountNew": "New Account",
+  "accountEdit": "Edit Account",
+  "accountName": "Account Name",
+  "accountNameHint": "e.g. K PLUS, SCB Easy, Cash",
+  "accountNamePlaceholder": "Account name",
+  "accountType": "Type",
+  "accountInitialBalance": "Initial Balance",
+  "accountManageTitle": "Manage Accounts",
+  "accountAddButton": "Add Account",
+  "accountEmpty": "No accounts yet",
+  "accountArchive": "Archive",
+  "accountArchiveConfirm": "Archive this account?",
+  "accountArchiveMessage": "This account will be hidden from the main list but all data remains",
+  "accountArchived": "Archived",
+  "accountTypeCash": "Cash",
+  "accountTypeBank": "Bank",
+  "accountTypeEwallet": "E-Wallet",
+  "accountTypeCredit": "Credit Card",
+  "accountTypeOther": "Other",
+
+  "pickerChooseIcon": "Choose Icon",
+  "pickerChooseColor": "Choose Color",
+
+  "commonSaved": "Saved",
+  "commonDeleted": "Deleted",
+
+  "settingsSectionDisplay": "Display",
+  "settingsSectionAccountCategory": "Accounts & Categories",
+  "settingsSectionDataBackup": "Data & Backup",
+  "settingsSectionSecurity": "Security",
+  "settingsAccountManage": "Manage Accounts",
+  "settingsAccountManageSub": "Add / Edit / Archive",
+  "settingsCategoryManage": "Manage Categories",
+  "settingsCategoryManageSub": "Default categories + create your own",
+  "settingsExportSub": "Save file / Share / Backup",
+  "settingsImportSub": "Restore from backup file",
+  "settingsBiometricSub": "Verify identity every time you open the app",
+  "settingsBiometricUnavailable": "Not supported on this device",
+  "settingsBiometricFailed": "Authentication failed",
+  "settingsVersionValue": "0.1.0 (MVP)",
+  "settingsPrivacySub": "Data stored on device only",
+  "settingsExportSuccess": "Export successful",
+  "settingsExportFailed": "Export failed",
+  "settingsImportFailed": "Import failed",
+  "settingsImportSuccess": "Imported {count} transactions",
+  "@settingsImportSuccess": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "settingsChooseTheme": "Choose Theme",
+  "settingsChooseLanguage": "Choose Language",
+
+  "reportsExpenseByCategory": "Expenses by Category",
+  "reportsTotalExpense": "Total Expense",
+  "reportsInsightTitle": "Insights",
+  "reportsItems": "{count} items",
+  "@reportsItems": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

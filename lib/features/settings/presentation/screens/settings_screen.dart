@@ -30,54 +30,54 @@ class SettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
         children: <Widget>[
           // ═══ การแสดงผล ═══
-          const _SectionHeader(title: 'การแสดงผล'),
+          _SectionHeader(title: l10n.settingsSectionDisplay),
           const _ThemeTile(),
           const _LanguageTile(),
 
           const Divider(),
 
           // ═══ บัญชีและหมวด ═══
-          const _SectionHeader(title: 'บัญชีและหมวด'),
+          _SectionHeader(title: l10n.settingsSectionAccountCategory),
           _SettingsTile(
             icon: Icons.account_balance_wallet_outlined,
-            title: 'จัดการบัญชี',
-            subtitle: 'เพิ่ม / แก้ไข / เก็บถาวร',
+            title: l10n.settingsAccountManage,
+            subtitle: l10n.settingsAccountManageSub,
             onTap: () => AccountListScreen.show(context),
           ),
           _SettingsTile(
             icon: Icons.category_outlined,
-            title: 'จัดการหมวด',
-            subtitle: 'หมวดเริ่มต้น + สร้างเอง',
+            title: l10n.settingsCategoryManage,
+            subtitle: l10n.settingsCategoryManageSub,
             onTap: () => CategoryListScreen.show(context),
           ),
 
           const Divider(),
 
           // ═══ ข้อมูล ═══
-          const _SectionHeader(title: 'ข้อมูลและสำรอง'),
+          _SectionHeader(title: l10n.settingsSectionDataBackup),
           const _ExportTile(),
           const _ImportTile(),
 
           const Divider(),
 
           // ═══ ความปลอดภัย ═══
-          const _SectionHeader(title: 'ความปลอดภัย'),
+          _SectionHeader(title: l10n.settingsSectionSecurity),
           const _BiometricTile(),
 
           const Divider(),
 
           // ═══ เกี่ยวกับ ═══
-          const _SectionHeader(title: 'เกี่ยวกับ'),
+          _SectionHeader(title: l10n.settingsAbout),
           _SettingsTile(
             icon: Icons.info_outline,
-            title: 'เวอร์ชั่น',
-            subtitle: '0.1.0 (MVP)',
+            title: l10n.settingsVersion,
+            subtitle: l10n.settingsVersionValue,
             trailing: const SizedBox.shrink(),
           ),
           _SettingsTile(
             icon: Icons.privacy_tip_outlined,
-            title: 'ความเป็นส่วนตัว',
-            subtitle: 'ข้อมูลเก็บในเครื่องเท่านั้น',
+            title: l10n.settingsPrivacy,
+            subtitle: l10n.settingsPrivacySub,
             trailing: const SizedBox.shrink(),
           ),
 
@@ -96,25 +96,26 @@ class _ThemeTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeMode mode = ref.watch(themeModeProvider);
 
     String label;
     IconData icon;
     switch (mode) {
       case ThemeMode.light:
-        label = 'สว่าง';
+        label = l10n.settingsThemeLight;
         icon = Icons.light_mode_outlined;
       case ThemeMode.dark:
-        label = 'มืด';
+        label = l10n.settingsThemeDark;
         icon = Icons.dark_mode_outlined;
       case ThemeMode.system:
-        label = 'ตามระบบ';
+        label = l10n.settingsThemeSystem;
         icon = Icons.brightness_auto_outlined;
     }
 
     return ListTile(
       leading: Icon(icon, color: context.colors.primary),
-      title: const Text('ธีม'),
+      title: Text(l10n.settingsTheme),
       subtitle: Text(label),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => _showThemePicker(context, ref, mode),
@@ -126,6 +127,7 @@ class _ThemeTile extends ConsumerWidget {
     WidgetRef ref,
     ThemeMode current,
   ) async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     await showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext ctx) {
@@ -134,13 +136,13 @@ class _ThemeTile extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const SizedBox(height: AppSpacing.md),
-              Text('เลือกธีม', style: ctx.textTheme.titleMedium),
+              Text(l10n.settingsChooseTheme, style: ctx.textTheme.titleMedium),
               const SizedBox(height: AppSpacing.sm),
-              _themeOption(ctx, ref, ThemeMode.light, 'สว่าง',
+              _themeOption(ctx, ref, ThemeMode.light, l10n.settingsThemeLight,
                   Icons.light_mode_outlined, current),
-              _themeOption(ctx, ref, ThemeMode.dark, 'มืด',
+              _themeOption(ctx, ref, ThemeMode.dark, l10n.settingsThemeDark,
                   Icons.dark_mode_outlined, current),
-              _themeOption(ctx, ref, ThemeMode.system, 'ตามระบบ',
+              _themeOption(ctx, ref, ThemeMode.system, l10n.settingsThemeSystem,
                   Icons.brightness_auto_outlined, current),
               const SizedBox(height: AppSpacing.md),
             ],
@@ -180,12 +182,15 @@ class _LanguageTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final Locale locale = ref.watch(localeProvider);
-    final String label = locale.languageCode == 'en' ? 'English' : 'ไทย';
+    final String label = locale.languageCode == 'en'
+        ? l10n.settingsLanguageEnglish
+        : l10n.settingsLanguageThai;
 
     return ListTile(
       leading: Icon(Icons.language_outlined, color: context.colors.primary),
-      title: const Text('ภาษา'),
+      title: Text(l10n.settingsLanguage),
       subtitle: Text(label),
       trailing: const Icon(Icons.chevron_right),
       onTap: () => _showLanguagePicker(context, ref, locale),
@@ -197,6 +202,7 @@ class _LanguageTile extends ConsumerWidget {
     WidgetRef ref,
     Locale current,
   ) async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     await showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext ctx) {
@@ -205,10 +211,10 @@ class _LanguageTile extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const SizedBox(height: AppSpacing.md),
-              Text('เลือกภาษา', style: ctx.textTheme.titleMedium),
+              Text(l10n.settingsChooseLanguage, style: ctx.textTheme.titleMedium),
               const SizedBox(height: AppSpacing.sm),
-              _langOption(ctx, ref, 'th', 'ไทย', current),
-              _langOption(ctx, ref, 'en', 'English', current),
+              _langOption(ctx, ref, 'th', l10n.settingsLanguageThai, current),
+              _langOption(ctx, ref, 'en', l10n.settingsLanguageEnglish, current),
               const SizedBox(height: AppSpacing.md),
             ],
           ),
@@ -252,10 +258,11 @@ class _ExportTileState extends ConsumerState<_ExportTile> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return ListTile(
       leading: Icon(Icons.upload_file_outlined, color: context.colors.primary),
-      title: const Text('ส่งออกข้อมูล (CSV)'),
-      subtitle: const Text('บันทึกไฟล์ / แชร์ / สำรอง'),
+      title: Text(l10n.settingsExportCsv),
+      subtitle: Text(l10n.settingsExportSub),
       trailing: _isExporting
           ? const SizedBox(
               width: 20,
@@ -310,10 +317,11 @@ class _ImportTileState extends ConsumerState<_ImportTile> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     return ListTile(
       leading: Icon(Icons.download_outlined, color: context.colors.primary),
-      title: const Text('นำเข้าข้อมูล (CSV)'),
-      subtitle: const Text('กู้คืนจากไฟล์สำรอง'),
+      title: Text(l10n.settingsImportCsv),
+      subtitle: Text(l10n.settingsImportSub),
       trailing: _isImporting
           ? const SizedBox(
               width: 20,
@@ -372,6 +380,7 @@ class _BiometricTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final bool isEnabled = ref.watch(biometricLockProvider);
     final AsyncValue<bool> availableAsync =
         ref.watch(biometricAvailableProvider);
@@ -382,16 +391,16 @@ class _BiometricTile extends ConsumerWidget {
           return ListTile(
             leading: Icon(Icons.lock_outline,
                 color: context.colors.onSurface.withValues(alpha: 0.4)),
-            title: const Text('ล็อกแอปด้วย Face ID / Touch ID'),
-            subtitle: const Text('อุปกรณ์นี้ไม่รองรับ'),
+            title: Text(l10n.settingsBiometricLock),
+            subtitle: Text(l10n.settingsBiometricUnavailable),
             enabled: false,
           );
         }
 
         return SwitchListTile(
           secondary: Icon(Icons.lock_outline, color: context.colors.primary),
-          title: const Text('ล็อกแอปด้วย Face ID / Touch ID'),
-          subtitle: const Text('ยืนยันตัวตนทุกครั้งที่เปิดแอป'),
+          title: Text(l10n.settingsBiometricLock),
+          subtitle: Text(l10n.settingsBiometricSub),
           value: isEnabled,
           onChanged: (bool value) async {
             final messenger = ScaffoldMessenger.of(context);
@@ -400,16 +409,16 @@ class _BiometricTile extends ConsumerWidget {
                 .setEnabled(value);
             if (!ok && value) {
               messenger.showSnackBar(
-                const SnackBar(content: Text('ยืนยันตัวตนไม่สำเร็จ')),
+                SnackBar(content: Text(l10n.settingsBiometricFailed)),
               );
             }
           },
         );
       },
-      loading: () => const ListTile(
-        leading: Icon(Icons.lock_outline),
-        title: Text('ล็อกแอปด้วย Face ID / Touch ID'),
-        trailing: SizedBox(
+      loading: () => ListTile(
+        leading: const Icon(Icons.lock_outline),
+        title: Text(l10n.settingsBiometricLock),
+        trailing: const SizedBox(
           width: 20,
           height: 20,
           child: CircularProgressIndicator(strokeWidth: 2),
