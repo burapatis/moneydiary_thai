@@ -95,6 +95,9 @@ dev_dependencies:
   # App Icons generator
   flutter_launcher_icons: ^0.14.4
 
+  # Splash screen generator
+  flutter_native_splash: ^2.4.4
+
 # Configure Flutter assets และ fonts
 flutter:
   uses-material-design: true
@@ -131,3 +134,25 @@ flutter_launcher_icons:
   android: false   # MVP เน้น iOS ก่อน — เพิ่ม Android ภายหลัง
   remove_alpha_ios: true   # iOS ห้ามมี alpha channel ใน app icon
   # ไม่ใส่ background_color → iOS รอบมุมเอง
+
+# ═══════════════════════════════════════════════
+# Splash Screen Configuration
+# ═══════════════════════════════════════════════
+# รัน: dart run flutter_native_splash:create
+# จะ generate splash screens ทุก device/orientation อัตโนมัติ
+flutter_native_splash:
+  # Background color (สีพื้น splash)
+  color: "#0F766E"           # teal — สีหลักของแอป
+  color_dark: "#065F58"      # teal เข้ม — สำหรับ dark mode
+
+  # Icon ที่จะอยู่ตรงกลาง
+  image: "assets/app_icon/splash_icon.png"
+  image_dark: "assets/app_icon/splash_icon_dark.png"
+
+  # iOS only (MVP)
+  ios: true
+  android: false
+
+  # iOS 12+ splash (modern)
+  ios_content_mode: center
+
