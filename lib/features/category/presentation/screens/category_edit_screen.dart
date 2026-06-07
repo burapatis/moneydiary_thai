@@ -106,7 +106,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
           padding: const EdgeInsets.all(AppSpacing.md),
           children: <Widget>[
             // Preview (icon + ชื่อ)
-            _buildPreview(tintColor),
+            _buildPreview(l10n, tintColor),
             const SizedBox(height: AppSpacing.lg),
 
             // ชื่อภาษาไทย
@@ -184,7 +184,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
     );
   }
 
-  Widget _buildPreview(Color tintColor) {
+  Widget _buildPreview(AppLocalizations l10n, Color tintColor) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -204,7 +204,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
           const SizedBox(height: AppSpacing.sm),
           Text(
             _nameThController.text.trim().isEmpty
-                ? 'ชื่อหมวด'
+                ? l10n.categoryNamePlaceholder
                 : _nameThController.text,
             style: context.textTheme.titleMedium,
           ),
@@ -221,7 +221,9 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
               borderRadius: AppRadius.smAll,
             ),
             child: Text(
-              widget.type == CategoryType.expense ? 'รายจ่าย' : 'รายรับ',
+              widget.type == CategoryType.expense
+                  ? l10n.homeExpense
+                  : l10n.homeIncome,
               style: context.textTheme.labelSmall?.copyWith(
                 color: widget.type == CategoryType.expense
                     ? AppColors.danger
@@ -237,6 +239,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
   Future<void> _save() async {
     setState(() => _isSaving = true);
 
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final NavigatorState nav = Navigator.of(context);
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final repo = ref.read(categoryRepositoryProvider);
@@ -264,10 +267,10 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
 
     if (result.isSuccess) {
       messenger.showSnackBar(
-        const SnackBar(
-          content: Text('บันทึกแล้ว'),
+        SnackBar(
+          content: Text(l10n.commonSaved),
           backgroundColor: AppColors.success,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       nav.pop(true);
@@ -275,7 +278,7 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
       setState(() => _isSaving = false);
       messenger.showSnackBar(
         SnackBar(
-          content: Text(result.failureOrNull?.message ?? 'เกิดข้อผิดพลาด'),
+          content: Text(result.failureOrNull?.message ?? l10n.commonError),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -283,25 +286,24 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
   }
 
   Future<void> _confirmDelete() async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext ctx) {
         return AlertDialog(
-          title: const Text('ลบหมวดนี้?'),
-          content: const Text(
-            'รายการที่ใช้หมวดนี้จะยังคงอยู่ แต่ต้องเปลี่ยนหมวดใหม่',
-          ),
+          title: Text(l10n.categoryDeleteConfirm),
+          content: Text(l10n.categoryDeleteMessage),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('ยกเลิก'),
+              child: Text(l10n.commonCancel),
             ),
             FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.danger,
               ),
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('ลบ'),
+              child: Text(l10n.commonDelete),
             ),
           ],
         );
@@ -320,13 +322,15 @@ class _CategoryEditScreenState extends ConsumerState<CategoryEditScreen> {
 
     if (result.isSuccess) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('ลบแล้ว')),
+        SnackBar(content: Text(l10n.commonDeleted)),
       );
       nav.pop(true);
     } else {
       messenger.showSnackBar(
         SnackBar(
-          content: Text(result.failureOrNull?.message ?? 'ลบไม่ได้'),
+          content: Text(
+            result.failureOrNull?.message ?? l10n.categoryDeleteFailed,
+          ),
           backgroundColor: AppColors.danger,
         ),
       );

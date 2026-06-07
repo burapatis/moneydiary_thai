@@ -6,6 +6,7 @@ import '../../../../core/errors/failures.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/utils/account_type_labels.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/icon_resolver.dart';
 import '../../../../core/widgets/pickers/color_picker.dart';
@@ -92,7 +93,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
           padding: const EdgeInsets.all(AppSpacing.md),
           children: <Widget>[
             // Preview
-            _buildPreview(tintColor),
+            _buildPreview(l10n, tintColor),
             const SizedBox(height: AppSpacing.lg),
 
             // ชื่อบัญชี
@@ -112,7 +113,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
             // ประเภทบัญชี
             _buildLabel(l10n.accountType),
             const SizedBox(height: AppSpacing.sm),
-            _buildTypeSelector(),
+            _buildTypeSelector(l10n),
             const SizedBox(height: AppSpacing.md),
 
             // ยอดเริ่มต้น
@@ -179,7 +180,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
     );
   }
 
-  Widget _buildPreview(Color tintColor) {
+  Widget _buildPreview(AppLocalizations l10n, Color tintColor) {
     return Center(
       child: Column(
         children: <Widget>[
@@ -199,7 +200,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
           const SizedBox(height: AppSpacing.sm),
           Text(
             _nameController.text.trim().isEmpty
-                ? 'ชื่อบัญชี'
+                ? l10n.accountNamePlaceholder
                 : _nameController.text,
             style: context.textTheme.titleMedium,
           ),
@@ -208,22 +209,14 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
     );
   }
 
-  Widget _buildTypeSelector() {
-    final List<({AccountType type, String label, IconData icon})> options =
-        <({AccountType type, String label, IconData icon})>[
-      (type: AccountType.cash, label: 'เงินสด', icon: Icons.money),
-      (
-        type: AccountType.bank,
-        label: 'ธนาคาร',
-        icon: Icons.account_balance
-      ),
-      (
-        type: AccountType.ewallet,
-        label: 'E-Wallet',
-        icon: Icons.account_balance_wallet
-      ),
-      (type: AccountType.credit, label: 'เครดิต', icon: Icons.credit_card),
-      (type: AccountType.other, label: 'อื่นๆ', icon: Icons.more_horiz),
+  Widget _buildTypeSelector(AppLocalizations l10n) {
+    final List<({AccountType type, IconData icon})> options =
+        <({AccountType type, IconData icon})>[
+      (type: AccountType.cash, icon: Icons.money),
+      (type: AccountType.bank, icon: Icons.account_balance),
+      (type: AccountType.ewallet, icon: Icons.account_balance_wallet),
+      (type: AccountType.credit, icon: Icons.credit_card),
+      (type: AccountType.other, icon: Icons.more_horiz),
     ];
 
     return Wrap(
@@ -231,6 +224,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
       runSpacing: AppSpacing.sm,
       children: options.map((opt) {
         final bool isSelected = _selectedType == opt.type;
+        final String label = accountTypeLabel(l10n, opt.type);
         return GestureDetector(
           onTap: () => setState(() => _selectedType = opt.type),
           child: AnimatedContainer(
@@ -261,7 +255,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
-                  opt.label,
+                  label,
                   style: TextStyle(
                     color: isSelected ? context.colors.primary : null,
                     fontWeight: isSelected ? FontWeight.w600 : null,
@@ -278,6 +272,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
   Future<void> _save() async {
     setState(() => _isSaving = true);
 
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final NavigatorState nav = Navigator.of(context);
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final repo = ref.read(accountRepositoryProvider);
@@ -308,10 +303,10 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
 
     if (result.isSuccess) {
       messenger.showSnackBar(
-        const SnackBar(
-          content: Text('บันทึกแล้ว'),
+        SnackBar(
+          content: Text(l10n.commonSaved),
           backgroundColor: AppColors.success,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       nav.pop(true);
@@ -319,7 +314,7 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
       setState(() => _isSaving = false);
       messenger.showSnackBar(
         SnackBar(
-          content: Text(result.failureOrNull?.message ?? 'เกิดข้อผิดพลาด'),
+          content: Text(result.failureOrNull?.message ?? l10n.commonError),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -327,22 +322,21 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
   }
 
   Future<void> _confirmArchive() async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext ctx) {
         return AlertDialog(
-          title: const Text('เก็บถาวรบัญชีนี้?'),
-          content: const Text(
-            'บัญชีนี้จะถูกซ่อนจาก list หลัก แต่ข้อมูลยังอยู่ครบถ้วน',
-          ),
+          title: Text(l10n.accountArchiveConfirm),
+          content: Text(l10n.accountArchiveMessage),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('ยกเลิก'),
+              child: Text(l10n.commonCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: const Text('เก็บถาวร'),
+              child: Text(l10n.accountArchive),
             ),
           ],
         );
@@ -361,13 +355,13 @@ class _AccountEditScreenState extends ConsumerState<AccountEditScreen> {
 
     if (result.isSuccess) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('เก็บถาวรแล้ว')),
+        SnackBar(content: Text(l10n.accountArchived)),
       );
       nav.pop(true);
     } else {
       messenger.showSnackBar(
         SnackBar(
-          content: Text(result.failureOrNull?.message ?? 'ผิดพลาด'),
+          content: Text(result.failureOrNull?.message ?? l10n.commonUnknownError),
           backgroundColor: AppColors.danger,
         ),
       );

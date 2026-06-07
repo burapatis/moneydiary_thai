@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../app_database.dart';
-import '../tables/accounts_table.dart';
 
 /// ──────────────────────────────────────────────────
 /// AccountSeeder — สร้างบัญชี "เงินสด" default

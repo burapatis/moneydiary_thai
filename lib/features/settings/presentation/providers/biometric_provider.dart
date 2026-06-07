@@ -36,14 +36,11 @@ class BiometricLockNotifier extends Notifier<bool> {
 
   /// เปิด/ปิด biometric lock
   /// คืน true ถ้าสำเร็จ
-  Future<bool> setEnabled(bool enabled) async {
+  Future<bool> setEnabled(bool enabled, {required String authReason}) async {
     final SharedPreferences prefs = ref.read(sharedPreferencesProvider);
 
     if (enabled) {
-      // ต้อง authenticate สำเร็จก่อน ถึงจะเปิดได้
-      final bool authenticated = await authenticate(
-        reason: 'ยืนยันตัวตนเพื่อเปิดใช้การล็อกแอป',
-      );
+      final bool authenticated = await authenticate(reason: authReason);
       if (!authenticated) return false;
     }
 
@@ -54,7 +51,7 @@ class BiometricLockNotifier extends Notifier<bool> {
 
   /// เรียก biometric prompt
   Future<bool> authenticate({
-    String reason = 'ยืนยันตัวตนเพื่อเข้าใช้แอป',
+    required String reason,
   }) async {
     final LocalAuthentication auth = ref.read(localAuthProvider);
     try {

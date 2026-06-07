@@ -100,14 +100,17 @@ abstract final class AppTheme {
       textTheme: textTheme,
       primaryTextTheme: textTheme,
 
-      // AppBar
+      // AppBar — ชื่อหน้ากลางจอ สี primary เด่นชัด
       appBarTheme: AppBarTheme(
         backgroundColor: scaffoldBg,
         foregroundColor: textPrimary,
         elevation: 0,
         scrolledUnderElevation: 0,
-        centerTitle: false,
-        titleTextStyle: AppTypography.h2.copyWith(color: textPrimary),
+        centerTitle: true,
+        titleTextStyle: AppTypography.h2.copyWith(
+          color: colorScheme.primary,
+          fontWeight: FontWeight.w700,
+        ),
         systemOverlayStyle: statusBarStyle,
       ),
 

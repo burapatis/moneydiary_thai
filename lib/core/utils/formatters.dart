@@ -82,12 +82,20 @@ abstract final class Formatters {
     return formatter.format(time);
   }
 
-  /// "วันนี้", "เมื่อวาน", "พรุ่งนี้" หรือ format ปกติ
-  static String formatRelativeDateTh(DateTime date) {
+  /// "วันนี้", "เมื่อวาน" หรือ format ปกติ (รองรับ th/en)
+  static String formatRelativeDate(DateTime date, {String locale = 'th'}) {
     final DateTime now = DateTime.now();
     final DateTime today = DateTime(now.year, now.month, now.day);
     final DateTime target = DateTime(date.year, date.month, date.day);
     final int diffDays = target.difference(today).inDays;
+
+    if (locale == 'en') {
+      if (diffDays == 0) return 'Today';
+      if (diffDays == -1) return 'Yesterday';
+      if (diffDays == 1) return 'Tomorrow';
+      if (diffDays > -7 && diffDays < 0) return '${diffDays.abs()} days ago';
+      return formatDate(date, locale: 'en');
+    }
 
     if (diffDays == 0) return 'วันนี้';
     if (diffDays == -1) return 'เมื่อวาน';
@@ -97,6 +105,10 @@ abstract final class Formatters {
     }
     return formatDateShortTh(date);
   }
+
+  /// @deprecated ใช้ formatRelativeDate แทน
+  static String formatRelativeDateTh(DateTime date) =>
+      formatRelativeDate(date, locale: 'th');
 
   /// format เดือน-ปี เช่น "พฤษภาคม 2569"
   static String formatMonthYearTh(DateTime date) {

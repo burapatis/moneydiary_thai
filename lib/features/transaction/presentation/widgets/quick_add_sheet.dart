@@ -354,36 +354,36 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
-        SizedBox(
-          height: 100,
-          child: categoriesAsync.when(
-            data: (List<Category> categories) {
-              if (categories.isEmpty) {
-                return Center(
+        categoriesAsync.when(
+          data: (List<Category> categories) {
+            if (categories.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                child: Center(
                   child: Text(
-                    'ยังไม่มีหมวด',
+                    l10n.categoryEmpty,
                     style: context.textTheme.bodyMedium,
                   ),
-                );
-              }
+                ),
+              );
+            }
 
-              // Auto-select last-used หรือ first
-              if (_selectedCategory == null) {
-                final String? lastUsedId =
-                    ref.read(lastUsedCategoryIdProvider);
-                final Category? lastUsed = lastUsedId == null
-                    ? null
-                    : categories
-                        .where((Category c) => c.id == lastUsedId)
-                        .firstOrNull;
-                _selectedCategory = lastUsed ?? categories.first;
-              }
+            if (_selectedCategory == null) {
+              final String? lastUsedId =
+                  ref.read(lastUsedCategoryIdProvider);
+              final Category? lastUsed = lastUsedId == null
+                  ? null
+                  : categories
+                      .where((Category c) => c.id == lastUsedId)
+                      .firstOrNull;
+              _selectedCategory = lastUsed ?? categories.first;
+            }
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (BuildContext ctx, int i) {
-                  final Category cat = categories[i];
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: categories.map((Category cat) {
                   return CategoryChip(
                     category: cat,
                     isSelected: _selectedCategory?.id == cat.id,
@@ -392,13 +392,15 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                       HapticFeedback.selectionClick();
                     },
                   );
-                },
-              );
-            },
-            loading: () =>
-                const Center(child: CircularProgressIndicator()),
-            error: (Object e, _) => Text('Error: $e'),
+                }).toList(),
+              ),
+            );
+          },
+          loading: () => const Padding(
+            padding: EdgeInsets.all(AppSpacing.lg),
+            child: Center(child: CircularProgressIndicator()),
           ),
+          error: (Object e, _) => Text(l10n.commonError),
         ),
       ],
     );
@@ -467,31 +469,70 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
   }
 
   Widget _buildDateSection(AppLocalizations l10n) {
-    return InkWell(
-      onTap: _pickDateTime,
-      borderRadius: AppRadius.smAll,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-        child: Row(
-          children: <Widget>[
-            Icon(
-              Icons.calendar_today_outlined,
-              size: 18,
-              color: context.colors.onSurface.withValues(alpha: 0.7),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Text(
-              '${Formatters.formatRelativeDateTh(_selectedDate)}  ${Formatters.formatTime(_selectedDate)}',
-              style: context.textTheme.bodyMedium,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Icon(
-              Icons.arrow_drop_down,
-              color: context.colors.onSurface.withValues(alpha: 0.5),
-            ),
-          ],
+    final String locale = Localizations.localeOf(context).languageCode;
+    final String dateLabel =
+        '${Formatters.formatRelativeDate(_selectedDate, locale: locale)}  '
+        '${Formatters.formatTime(_selectedDate)}';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          l10n.transactionDate,
+          style: context.textTheme.labelMedium?.copyWith(
+            color: context.colors.onSurface.withValues(alpha: 0.7),
+          ),
         ),
-      ),
+        const SizedBox(height: AppSpacing.xs),
+        Material(
+          color: context.colors.surfaceContainerHighest,
+          borderRadius: AppRadius.mdAll,
+          child: InkWell(
+            onTap: _pickDateTime,
+            borderRadius: AppRadius.mdAll,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.md,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.calendar_today_outlined,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          dateLabel,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.transactionDateHint,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: context.colors.onSurface
+                                .withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.edit_calendar_outlined,
+                    color: context.colors.primary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -9,7 +9,6 @@
 .pub/
 build/
 .metadata
-pubspec.lock
 
 # IDE
 .idea/

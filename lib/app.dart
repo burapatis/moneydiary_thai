@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/router/app_router.dart';
+import 'core/theme/app_text_scale.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/biometric_lock_gate.dart';
+import 'features/onboarding/presentation/screens/terms_acceptance_screen.dart';
+import 'features/onboarding/presentation/screens/usage_guide_screen.dart';
 import 'l10n/gen/app_localizations.dart';
 import 'services/preferences_service.dart';
 
 /// ──────────────────────────────────────────────────
 /// MoneyDiaryApp — Root widget ของแอป
-/// ──────────────────────────────────────────────────
-/// - ใช้ MaterialApp.router (สำหรับ go_router)
-/// - Theme mode + Locale มาจาก Riverpod providers
-/// - รองรับไทย + อังกฤษ
 /// ──────────────────────────────────────────────────
 class MoneyDiaryApp extends ConsumerWidget {
   const MoneyDiaryApp({super.key});
@@ -21,35 +20,71 @@ class MoneyDiaryApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeMode themeMode = ref.watch(themeModeProvider);
     final Locale locale = ref.watch(localeProvider);
-    final router = ref.watch(appRouterProvider);
+    final bool termsAccepted = ref.watch(termsAcceptedProvider);
+    final bool usageGuideDone = ref.watch(usageGuideDoneProvider);
+
+    final Widget? firstLaunchScreen = _firstLaunchScreen(
+      termsAccepted: termsAccepted,
+      usageGuideDone: usageGuideDone,
+    );
+
+    if (firstLaunchScreen != null) {
+      return MaterialApp(
+        title: 'MoneyDiary',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: themeMode,
+        locale: locale,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        builder: (BuildContext context, Widget? child) =>
+            _wrapWithUserTextScale(context, ref, child),
+        home: firstLaunchScreen,
+      );
+    }
 
     return MaterialApp.router(
       title: 'MoneyDiary',
       debugShowCheckedModeBanner: false,
-
-      // Theme
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
-
-      // Routing
-      routerConfig: router,
-
-      // Localization
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-
-      // ทำให้ font scale ไม่เกิน 1.5 เพื่อไม่ให้ layout พัง
-      // (ผู้ใช้ที่ตั้งค่าระบบใหญ่มากก็ยังอ่านได้ แต่ UI ไม่แตก)
+      routerConfig: ref.watch(appRouterProvider),
       builder: (BuildContext context, Widget? child) {
-        final MediaQueryData mq = MediaQuery.of(context);
-        final double scale = mq.textScaler.scale(1).clamp(1.0, 1.5);
-        return MediaQuery(
-          data: mq.copyWith(textScaler: TextScaler.linear(scale)),
-          child: child ?? const SizedBox.shrink(),
+        return BiometricLockGate(
+          child: _wrapWithUserTextScale(context, ref, child),
         );
       },
+    );
+  }
+
+  Widget? _firstLaunchScreen({
+    required bool termsAccepted,
+    required bool usageGuideDone,
+  }) {
+    if (!termsAccepted) {
+      return const TermsAcceptanceScreen(mode: TermsScreenMode.firstLaunch);
+    }
+    if (!usageGuideDone) {
+      return const UsageGuideScreen(mode: UsageGuideMode.firstLaunch);
+    }
+    return null;
+  }
+
+  Widget _wrapWithUserTextScale(
+    BuildContext context,
+    WidgetRef ref,
+    Widget? child,
+  ) {
+    final double scale = ref.watch(textScaleProvider).scaleFactor;
+    final MediaQueryData mq = MediaQuery.of(context);
+    return MediaQuery(
+      data: mq.copyWith(textScaler: TextScaler.linear(scale)),
+      child: child ?? const SizedBox.shrink(),
     );
   }
 }

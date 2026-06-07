@@ -5,6 +5,7 @@ import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/icon_resolver.dart';
+import '../../../../core/utils/account_type_labels.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/database/database_providers.dart';
 import '../../../transaction/presentation/providers/transaction_providers.dart';
@@ -111,7 +112,7 @@ class _AccountListItem extends ConsumerWidget {
         child: Icon(icon, color: color, size: 24),
       ),
       title: Text(account.name),
-      subtitle: Text(_typeLabel(account.type)),
+      subtitle: Text(accountTypeLabel(AppLocalizations.of(context), account.type)),
       trailing: balanceAsync.when(
         data: (double balance) => Text(
           Formatters.formatCurrency(balance),
@@ -129,21 +130,6 @@ class _AccountListItem extends ConsumerWidget {
       ),
       onTap: () => AccountEditScreen.show(context, editing: account),
     );
-  }
-
-  String _typeLabel(AccountType type) {
-    switch (type) {
-      case AccountType.cash:
-        return 'เงินสด';
-      case AccountType.bank:
-        return 'ธนาคาร';
-      case AccountType.ewallet:
-        return 'E-Wallet';
-      case AccountType.credit:
-        return 'บัตรเครดิต';
-      case AccountType.other:
-        return 'อื่นๆ';
-    }
   }
 }
 

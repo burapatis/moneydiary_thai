@@ -7,6 +7,7 @@ import '../../../../core/utils/icon_resolver.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/database/database_providers.dart';
 import '../../domain/entities/category.dart';
+import '../../domain/repositories/category_repository.dart';
 import 'category_edit_screen.dart';
 
 /// ──────────────────────────────────────────────────
@@ -135,10 +136,11 @@ class _CategoryListItem extends ConsumerWidget {
   const _CategoryListItem({required this.category, required this.repo});
 
   final Category category;
-  final dynamic repo; // CategoryRepository
+  final CategoryRepository repo;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
     final Color color = ColorParser.parse(category.color);
     final IconData icon = IconResolver.resolve(category.icon);
     final bool isHidden = category.hidden;
@@ -199,7 +201,7 @@ class _CategoryListItem extends ConsumerWidget {
                     ? context.colors.onSurface.withValues(alpha: 0.5)
                     : context.colors.primary,
               ),
-              tooltip: isHidden ? 'แสดง' : 'ซ่อน',
+              tooltip: isHidden ? l10n.categoryShow : l10n.categoryHide,
               onPressed: () => _toggleHide(ref),
             ),
           // Edit (only for custom)

@@ -3,7 +3,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../../../services/database/app_database.dart';
-import '../../../../services/database/tables/transactions_table.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/repositories/transaction_repository.dart';
 

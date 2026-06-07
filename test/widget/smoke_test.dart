@@ -13,7 +13,11 @@ import '../helpers/test_database.dart';
 
 void main() {
   setUpAll(() {
-    SharedPreferences.setMockInitialValues(<String, Object>{});
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'terms_accepted': true,
+      'usage_guide_done': true,
+      'onboarding_done': true,
+    });
   });
 
   testWidgets('App boots and shows 4-tab bottom nav', (WidgetTester tester) async {

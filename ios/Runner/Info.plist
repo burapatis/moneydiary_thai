@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>MoneyDiary Thai</string>
+	<string>บัญชีวิถีไทย</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,10 +24,18 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>แอปนี้ไม่ได้ใช้ Camera โดยตรง แต่ third-party packages อาจ reference APIs นี้</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>ใช้ Face ID เพื่อล็อกแอปให้ปลอดภัย</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>แอปนี้ไม่ได้ใช้ Location โดยตรง แต่ third-party packages อาจ reference APIs นี้</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>แอปนี้ไม่ได้ใช้ Photo Library โดยตรง แต่ third-party packages อาจ reference APIs นี้</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -60,15 +68,11 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

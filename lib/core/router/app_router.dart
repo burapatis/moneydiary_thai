@@ -7,6 +7,7 @@ import '../../features/report/presentation/screens/reports_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
 import '../widgets/main_scaffold.dart';
+import '../../l10n/gen/app_localizations.dart';
 
 /// ──────────────────────────────────────────────────
 /// App Router — กำหนดเส้นทางการนำทางทั้งหมด
@@ -23,10 +24,6 @@ abstract final class AppRoutes {
   static const String reports = '/reports';
   static const String transactions = '/transactions';
   static const String settings = '/settings';
-
-  // Sub-routes (เพิ่มใน batch ถัดไป)
-  static const String addTransaction = '/transactions/add';
-  static const String editTransaction = '/transactions/:id/edit';
 }
 
 /// Riverpod provider สำหรับ GoRouter (สามารถ test ได้)
@@ -95,10 +92,13 @@ final Provider<GoRouter> appRouterProvider = Provider<GoRouter>((Ref ref) {
       ),
     ],
     // Error fallback
-    errorBuilder: (BuildContext context, GoRouterState state) => Scaffold(
-      body: Center(
-        child: Text('Page not found: ${state.uri}'),
-      ),
-    ),
+    errorBuilder: (BuildContext context, GoRouterState state) {
+      final AppLocalizations l10n = AppLocalizations.of(context);
+      return Scaffold(
+        body: Center(
+          child: Text(l10n.routerPageNotFound(state.uri.toString())),
+        ),
+      );
+    },
   );
 });

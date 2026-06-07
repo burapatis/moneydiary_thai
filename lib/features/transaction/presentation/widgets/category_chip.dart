@@ -50,8 +50,8 @@ class CategoryChip extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            // Icon circle
             Container(
               width: 36,
               height: 36,
@@ -66,14 +66,14 @@ class CategoryChip extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
-            // Name (Thai default)
             Text(
               category.nameTh,
               style: context.textTheme.labelSmall?.copyWith(
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                height: 1.2,
               ),
               textAlign: TextAlign.center,
-              maxLines: 2,
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
           ],

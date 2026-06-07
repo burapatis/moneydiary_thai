@@ -36,6 +36,12 @@ class BackupController {
     }
     final List<Transaction> transactions = txResult.dataOrNull!;
 
+    if (transactions.isEmpty) {
+      return Result<String>.failure(
+        const ValidationFailure(message: 'EXPORT_EMPTY'),
+      );
+    }
+
     final catResult = await categoryRepo.getAll(includeHidden: true);
     final List<Category> categories = catResult.dataOrNull ?? <Category>[];
     final Map<String, Category> categoryMap = <String, Category>{

@@ -2,7 +2,6 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../app_database.dart';
-import '../tables/categories_table.dart';
 
 /// ──────────────────────────────────────────────────
 /// CategorySeeder — ใส่หมวด default 25 หมวด
