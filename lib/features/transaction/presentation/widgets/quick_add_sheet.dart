@@ -96,6 +96,14 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _amountFocus.requestFocus();
     });
+    _amountFocus.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  void _finishAmountEntry() {
+    FocusScope.of(context).unfocus();
+    HapticFeedback.lightImpact();
   }
 
   @override
@@ -126,83 +134,112 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
       maxChildSize: 0.95,
       expand: false,
       builder: (BuildContext context, ScrollController scrollController) {
+        final double keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+        final bool showKeyboardDoneBar =
+            _amountFocus.hasFocus && keyboardHeight > 0;
+
         return Container(
           decoration: BoxDecoration(
             color: context.colors.surface,
             borderRadius: AppRadius.bottomSheet,
           ),
-          child: ListView(
-            controller: scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: Stack(
             children: <Widget>[
-              const SizedBox(height: AppSpacing.sm),
-
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ListView(
+                controller: scrollController,
+                padding: EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                  showKeyboardDoneBar ? 72 : AppSpacing.md,
+                ),
                 children: <Widget>[
-                  Text(
-                    widget.editingTransaction == null
-                        ? l10n.transactionAddTitle
-                        : l10n.transactionEditTitle,
-                    style: context.textTheme.titleLarge,
-                  ),
+                  // Header
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      // Delete button (เฉพาะ edit mode)
-                      if (widget.editingTransaction != null)
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline),
-                          color: AppColors.danger,
-                          onPressed: _confirmDelete,
-                          tooltip: l10n.commonDelete,
-                        ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.of(context).pop(),
-                        tooltip: l10n.commonCancel,
+                      Text(
+                        widget.editingTransaction == null
+                            ? l10n.transactionAddTitle
+                            : l10n.transactionEditTitle,
+                        style: context.textTheme.titleLarge,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          if (widget.editingTransaction != null)
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline),
+                              color: AppColors.danger,
+                              onPressed: _confirmDelete,
+                              tooltip: l10n.commonDelete,
+                            ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () => Navigator.of(context).pop(),
+                            tooltip: l10n.commonCancel,
+                          ),
+                        ],
                       ),
                     ],
                   ),
+
+                  const SizedBox(height: AppSpacing.md),
+
+                  _buildTypeToggle(l10n),
+
+                  const SizedBox(height: AppSpacing.lg),
+
+                  _buildAmountInput(l10n),
+
+                  const SizedBox(height: AppSpacing.lg),
+
+                  _buildCategorySection(l10n),
+
+                  const SizedBox(height: AppSpacing.lg),
+
+                  _buildAccountSection(l10n),
+
+                  const SizedBox(height: AppSpacing.md),
+
+                  _buildNoteInput(l10n),
+
+                  const SizedBox(height: AppSpacing.md),
+
+                  _buildDateSection(l10n),
+
+                  const SizedBox(height: AppSpacing.xl),
+
+                  _buildSaveButton(l10n),
+
+                  const SizedBox(height: AppSpacing.md),
                 ],
               ),
-
-              const SizedBox(height: AppSpacing.md),
-
-              // Type toggle (expense / income)
-              _buildTypeToggle(l10n),
-
-              const SizedBox(height: AppSpacing.lg),
-
-              // Amount input (Hero)
-              _buildAmountInput(l10n),
-
-              const SizedBox(height: AppSpacing.lg),
-
-              // Category picker
-              _buildCategorySection(l10n),
-
-              const SizedBox(height: AppSpacing.lg),
-
-              // Account selector
-              _buildAccountSection(l10n),
-
-              const SizedBox(height: AppSpacing.md),
-
-              // Note input
-              _buildNoteInput(l10n),
-
-              const SizedBox(height: AppSpacing.md),
-
-              // Date/time
-              _buildDateSection(l10n),
-
-              const SizedBox(height: AppSpacing.xl),
-
-              // Save button
-              _buildSaveButton(l10n),
-
-              const SizedBox(height: AppSpacing.md),
+              if (showKeyboardDoneBar)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Material(
+                    elevation: 4,
+                    color: context.colors.surfaceContainerHighest,
+                    child: SafeArea(
+                      top: false,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: AppSpacing.sm,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: _finishAmountEntry,
+                            child: Text(l10n.transactionAmountDone),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         );
@@ -302,6 +339,9 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
           controller: _amountController,
           focusNode: _amountFocus,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          textInputAction: TextInputAction.done,
+          onEditingComplete: _finishAmountEntry,
+          onTapOutside: (_) => _finishAmountEntry(),
           inputFormatters: <TextInputFormatter>[
             // อนุญาตเฉพาะตัวเลข + จุดทศนิยม + จุลภาค
             FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
@@ -334,6 +374,24 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
           ),
           onChanged: (_) => setState(() {}), // re-evaluate _canSave
         ),
+        if (_amountFocus.hasFocus) ...<Widget>[
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            l10n.transactionAmountNextHint,
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.onSurface.withValues(alpha: 0.65),
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.tonal(
+              onPressed: _finishAmountEntry,
+              child: Text(l10n.transactionAmountDone),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -388,6 +446,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                     category: cat,
                     isSelected: _selectedCategory?.id == cat.id,
                     onTap: () {
+                      _finishAmountEntry();
                       setState(() => _selectedCategory = cat);
                       HapticFeedback.selectionClick();
                     },

@@ -115,9 +115,9 @@ class _AccountListItem extends ConsumerWidget {
       subtitle: Text(accountTypeLabel(AppLocalizations.of(context), account.type)),
       trailing: balanceAsync.when(
         data: (double balance) => Text(
-          Formatters.formatCurrency(balance),
+          Formatters.formatMoney(balance),
           style: context.textTheme.titleMedium?.copyWith(
-            color: balance >= 0 ? context.colors.primary : null,
+            color: context.colors.onSurface,
             fontWeight: FontWeight.w600,
           ),
         ),

@@ -12,6 +12,7 @@ import '../../../../core/providers/package_info_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_scale.dart';
+import '../../../../core/widgets/section_card.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../../services/preferences_service.dart';
 import '../../../account/presentation/screens/account_list_screen.dart';
@@ -34,86 +35,138 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
         children: <Widget>[
           _SectionHeader(title: l10n.settingsSectionDisplay),
-          const _ThemeTile(),
-          const _LanguageTile(),
-          const _TextScaleTile(),
+          SectionCard(
+            variant: SectionCardVariant.primary,
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: const <Widget>[
+                _ThemeTile(),
+                _LanguageTile(),
+                _TextScaleTile(),
+              ],
+            ),
+          ),
 
-          const Divider(),
+          const SizedBox(height: AppSpacing.md),
 
           _SectionHeader(title: l10n.settingsSectionAccountCategory),
-          _SettingsTile(
-            icon: Icons.account_balance_wallet_outlined,
-            title: l10n.settingsAccountManage,
-            subtitle: l10n.settingsAccountManageSub,
-            onTap: () => AccountListScreen.show(context),
-          ),
-          _SettingsTile(
-            icon: Icons.category_outlined,
-            title: l10n.settingsCategoryManage,
-            subtitle: l10n.settingsCategoryManageSub,
-            onTap: () => CategoryListScreen.show(context),
+          SectionCard(
+            variant: SectionCardVariant.info,
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: <Widget>[
+                _SettingsTile(
+                  icon: Icons.account_balance_wallet_outlined,
+                  title: l10n.settingsAccountManage,
+                  subtitle: l10n.settingsAccountManageSub,
+                  onTap: () => AccountListScreen.show(context),
+                ),
+                _SettingsTile(
+                  icon: Icons.category_outlined,
+                  title: l10n.settingsCategoryManage,
+                  subtitle: l10n.settingsCategoryManageSub,
+                  onTap: () => CategoryListScreen.show(context),
+                ),
+              ],
+            ),
           ),
 
-          const Divider(),
+          const SizedBox(height: AppSpacing.md),
 
           _SectionHeader(title: l10n.settingsSectionDataBackup),
-          const _ExportTile(),
-          const _ImportTile(),
+          SectionCard(
+            variant: SectionCardVariant.expense,
+            padding: EdgeInsets.zero,
+            child: const Column(
+              children: <Widget>[
+                _ExportTile(),
+                _ImportTile(),
+                _DeleteAllDataTile(),
+              ],
+            ),
+          ),
 
-          const Divider(),
+          const SizedBox(height: AppSpacing.md),
 
           _SectionHeader(title: l10n.settingsSectionSecurity),
-          const _BiometricTile(),
-          const _AnalyticsTile(),
+          SectionCard(
+            variant: SectionCardVariant.insight,
+            padding: EdgeInsets.zero,
+            child: const Column(
+              children: <Widget>[
+                _BiometricTile(),
+                _AnalyticsTile(),
+              ],
+            ),
+          ),
 
-          const Divider(),
+          const SizedBox(height: AppSpacing.md),
 
           _SectionHeader(title: l10n.settingsSectionHelp),
-          _SettingsTile(
-            icon: Icons.gavel_outlined,
-            title: l10n.settingsViewTerms,
-            subtitle: l10n.settingsViewTermsSub,
-            onTap: () => TermsAcceptanceScreen.show(context),
-          ),
-          _SettingsTile(
-            icon: Icons.menu_book_outlined,
-            title: l10n.settingsViewUsageGuide,
-            subtitle: l10n.settingsViewUsageGuideSub,
-            onTap: () => UsageGuideScreen.show(context),
-          ),
-          _SettingsTile(
-            icon: Icons.help_outline,
-            title: l10n.settingsViewOnlineHelp,
-            subtitle: l10n.settingsViewOnlineHelpSub,
-            onTap: () => _openExternalUrl(
-              context,
-              EnvConfig.supportHelpUrl,
+          SectionCard(
+            variant: SectionCardVariant.income,
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: <Widget>[
+                _SettingsTile(
+                  icon: Icons.gavel_outlined,
+                  title: l10n.settingsViewTerms,
+                  subtitle: l10n.settingsViewTermsSub,
+                  onTap: () => TermsAcceptanceScreen.show(context),
+                ),
+                _SettingsTile(
+                  icon: Icons.menu_book_outlined,
+                  title: l10n.settingsViewUsageGuide,
+                  subtitle: l10n.settingsViewUsageGuideSub,
+                  onTap: () => UsageGuideScreen.show(context),
+                ),
+                _SettingsTile(
+                  icon: Icons.help_outline,
+                  title: l10n.settingsViewOnlineHelp,
+                  subtitle: l10n.settingsViewOnlineHelpSub,
+                  onTap: () => _openExternalUrl(
+                    context,
+                    EnvConfig.supportHelpUrl,
+                  ),
+                ),
+              ],
             ),
           ),
 
-          const Divider(),
+          const SizedBox(height: AppSpacing.md),
 
           _SectionHeader(title: l10n.settingsAbout),
-          const _VersionTile(),
-          _SettingsTile(
-            icon: Icons.privacy_tip_outlined,
-            title: l10n.settingsPrivacyPolicy,
-            subtitle: l10n.settingsPrivacySub,
-            onTap: () => _openExternalUrl(
-              context,
-              EnvConfig.privacyPolicyUrl,
-            ),
-          ),
-          _SettingsTile(
-            icon: Icons.description_outlined,
-            title: l10n.settingsTermsOfService,
-            subtitle: l10n.settingsTermsOnlineSub,
-            onTap: () => _openExternalUrl(
-              context,
-              EnvConfig.termsOfServiceUrl,
+          SectionCard(
+            variant: SectionCardVariant.neutral,
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: <Widget>[
+                const _VersionTile(),
+                _SettingsTile(
+                  icon: Icons.privacy_tip_outlined,
+                  title: l10n.settingsPrivacyPolicy,
+                  subtitle: l10n.settingsPrivacySub,
+                  onTap: () => _openExternalUrl(
+                    context,
+                    EnvConfig.privacyPolicyUrl,
+                  ),
+                ),
+                _SettingsTile(
+                  icon: Icons.description_outlined,
+                  title: l10n.settingsTermsOfService,
+                  subtitle: l10n.settingsTermsOnlineSub,
+                  onTap: () => _openExternalUrl(
+                    context,
+                    EnvConfig.termsOfServiceUrl,
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -622,6 +675,91 @@ class _ImportTileState extends ConsumerState<_ImportTile> {
 }
 
 // ════════════════════════════════════════════════
+// Delete All Data Tile
+// ════════════════════════════════════════════════
+class _DeleteAllDataTile extends ConsumerStatefulWidget {
+  const _DeleteAllDataTile();
+
+  @override
+  ConsumerState<_DeleteAllDataTile> createState() => _DeleteAllDataTileState();
+}
+
+class _DeleteAllDataTileState extends ConsumerState<_DeleteAllDataTile> {
+  bool _isDeleting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    return ListTile(
+      leading: const Icon(Icons.delete_forever_outlined, color: AppColors.danger),
+      title: Text(
+        l10n.settingsDeleteAll,
+        style: const TextStyle(color: AppColors.danger),
+      ),
+      subtitle: Text(l10n.settingsDeleteAllSub),
+      trailing: _isDeleting
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.chevron_right, color: AppColors.danger),
+      onTap: _isDeleting ? null : _confirmAndDelete,
+    );
+  }
+
+  Future<void> _confirmAndDelete() async {
+    final AppLocalizations l10n = AppLocalizations.of(context);
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          title: Text(l10n.settingsDeleteAllConfirm),
+          content: Text(l10n.settingsDeleteAllConfirmMessage),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(l10n.commonCancel),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.danger,
+              ),
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(l10n.settingsDeleteAll),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isDeleting = true);
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+    final Result<void> result =
+        await ref.read(backupControllerProvider).deleteAllData();
+
+    if (!mounted) return;
+    setState(() => _isDeleting = false);
+
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          result.isSuccess
+              ? l10n.settingsDeleteAllSuccess
+              : (result.failureOrNull?.message ?? l10n.settingsDeleteAllFailed),
+        ),
+        backgroundColor:
+            result.isSuccess ? AppColors.success : AppColors.danger,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════
 // Biometric Tile
 // ════════════════════════════════════════════════
 class _BiometricTile extends ConsumerWidget {
@@ -692,14 +830,13 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        left: AppSpacing.md,
-        right: AppSpacing.md,
-        top: AppSpacing.md,
+        top: AppSpacing.sm,
         bottom: AppSpacing.xs,
       ),
       child: Text(
         title,
-        style: context.textTheme.labelLarge?.copyWith(
+        style: context.textTheme.titleSmall?.copyWith(
+          fontWeight: FontWeight.w600,
           color: context.colors.primary,
         ),
       ),

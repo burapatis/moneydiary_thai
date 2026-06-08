@@ -1,8 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../services/backup/csv_backup_service.dart';
+import '../../../../services/database/app_database.dart';
 import '../../../../services/database/database_providers.dart';
+import '../../../../services/preferences_service.dart';
 import '../../../account/domain/entities/account.dart';
 import '../../../category/domain/entities/category.dart';
 import '../../../transaction/domain/entities/transaction.dart';
@@ -135,6 +139,24 @@ class BackupController {
     }
 
     return Result<int>.success(successCount);
+  }
+
+  /// ลบข้อมูลทั้งหมด — transactions + accounts + categories แล้ว seed ใหม่
+  Future<Result<void>> deleteAllData() async {
+    try {
+      final AppDatabase db = _ref.read(appDatabaseProvider);
+      await db.resetAllUserData();
+
+      final SharedPreferences prefs = _ref.read(sharedPreferencesProvider);
+      await prefs.remove(AppConstants.prefKeyLastUsedCategoryId);
+      await prefs.remove(AppConstants.prefKeyLastUsedAccountId);
+
+      return Result<void>.success(null);
+    } catch (e) {
+      return Result<void>.failure(
+        DatabaseFailure(message: 'ลบข้อมูลทั้งหมดล้มเหลว: $e'),
+      );
+    }
   }
 }
 

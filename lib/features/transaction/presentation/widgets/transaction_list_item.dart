@@ -41,11 +41,11 @@ class TransactionListItem extends ConsumerWidget {
 
     final Color amountColor = transaction.type == TransactionType.income
         ? AppColors.success
-        : context.colors.onSurface;
+        : AppColors.danger;
 
     final String amountText = transaction.type == TransactionType.income
-        ? '+${Formatters.formatCurrency(transaction.amount, decimals: 0)}'
-        : '-${Formatters.formatCurrency(transaction.amount, decimals: 0)}';
+        ? '+${Formatters.formatMoney(transaction.amount)}'
+        : '-${Formatters.formatMoney(transaction.amount)}';
 
     return InkWell(
       onTap: onTap,

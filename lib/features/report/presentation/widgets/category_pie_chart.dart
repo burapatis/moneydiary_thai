@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/build_context_extensions.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/icon_resolver.dart';
@@ -78,12 +79,10 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
                     style: context.textTheme.bodySmall,
                   ),
                   Text(
-                    Formatters.formatCurrency(
-                      widget.totalExpense,
-                      decimals: 0,
-                    ),
+                    Formatters.formatMoney(widget.totalExpense),
                     style: context.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.w700,
+                      color: AppColors.danger,
                     ),
                   ),
                 ],
@@ -175,9 +174,10 @@ class _CategoryPieChartState extends State<CategoryPieChart> {
               ),
               // Amount
               Text(
-                Formatters.formatCurrency(s.amount, decimals: 0),
+                Formatters.formatMoney(s.amount),
                 style: context.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: AppColors.danger,
                 ),
               ),
             ],

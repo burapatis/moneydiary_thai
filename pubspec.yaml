@@ -2,7 +2,7 @@ name: moneydiary_thai
 description: "บัญชีวิถีไทย — สมุดบันทึกเงินวิถีไทย บันทึกรายรับ-รายจ่าย ออฟไลน์ ส่วนตัว ปลอดภัย"
 # ป้องกันการ publish โดยไม่ตั้งใจ
 publish_to: 'none'
-version: 1.1.0+4
+version: 1.1.1+5
 
 environment:
   sdk: ^3.6.0

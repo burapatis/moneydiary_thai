@@ -28,6 +28,11 @@ abstract final class Formatters {
     return formatter.format(amount);
   }
 
+  /// แสดงจำนวนเงินมาตรฐานทั้งแอป — ทศนิยม 2 ตำแหน่งเสมอ
+  static String formatMoney(double amount, {String locale = 'th_TH'}) {
+    return formatCurrency(amount, locale: locale, decimals: 2);
+  }
+
   /// format จำนวนเงินแบบกระชับ (สำหรับ chart label)
   ///
   /// ตัวอย่าง:

@@ -61,6 +61,17 @@ class AppDatabase extends _$AppDatabase {
           await AccountSeeder.seedIfEmpty(this);
         },
       );
+
+  /// ลบข้อมูลผู้ใช้ทั้งหมด แล้ว seed หมวด/บัญชีเริ่มต้นใหม่
+  Future<void> resetAllUserData() async {
+    await transaction(() async {
+      await delete(transactions).go();
+      await delete(accounts).go();
+      await delete(categories).go();
+    });
+    await CategorySeeder.seed(this);
+    await AccountSeeder.seedIfEmpty(this);
+  }
 }
 
 QueryExecutor _openConnection() {

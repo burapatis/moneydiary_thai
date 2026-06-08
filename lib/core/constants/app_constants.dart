@@ -9,7 +9,7 @@ abstract final class AppConstants {
   static const String appNameTh = 'สมุดบันทึกเงินไทย';
 
   /// Version fallback — ใช้ package_info_plus ใน UI จริง
-  static const String appVersionFallback = '1.1.0';
+  static const String appVersionFallback = '1.1.1';
 
   /// Currency เริ่มต้น
   static const String defaultCurrency = 'THB';

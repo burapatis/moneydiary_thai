@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/section_card.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../domain/entities/report_summary.dart';
 import '../providers/report_providers.dart';
@@ -185,7 +186,12 @@ class ReportsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Card(
-            color: context.colors.surfaceContainerHighest,
+            color: SectionCard.backgroundColor(
+              context,
+              SectionCardVariant.expense,
+            ),
+            elevation: 0,
+            margin: EdgeInsets.zero,
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: CategoryPieChart(
@@ -203,57 +209,56 @@ class ReportsScreen extends ConsumerWidget {
   }
 
   Widget _buildSummaryCards(BuildContext context, ReportSummary report) {
-    return Card(
-      color: context.colors.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
+    return Column(
+      children: <Widget>[
+        Row(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: _miniStat(
-                    context,
-                    label: AppLocalizations.of(context).homeIncome,
-                    value: report.totalIncome,
-                    color: AppColors.success,
-                  ),
+            Expanded(
+              child: SectionCard(
+                variant: SectionCardVariant.income,
+                child: _miniStat(
+                  context,
+                  label: AppLocalizations.of(context).homeIncome,
+                  value: report.totalIncome,
+                  color: AppColors.success,
                 ),
-                Container(
-                  width: 1,
-                  height: 40,
-                  color: context.colors.outline,
-                ),
-                Expanded(
-                  child: _miniStat(
-                    context,
-                    label: AppLocalizations.of(context).homeExpense,
-                    value: report.totalExpense,
-                    color: AppColors.danger,
-                  ),
-                ),
-              ],
+              ),
             ),
-            const Divider(height: AppSpacing.lg),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(AppLocalizations.of(context).homeBalance,
-                    style: context.textTheme.bodyLarge),
-                Text(
-                  Formatters.formatCurrency(report.net),
-                  style: context.textTheme.titleLarge?.copyWith(
-                    color: report.net >= 0
-                        ? AppColors.success
-                        : AppColors.danger,
-                    fontWeight: FontWeight.w700,
-                  ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: SectionCard(
+                variant: SectionCardVariant.expense,
+                child: _miniStat(
+                  context,
+                  label: AppLocalizations.of(context).homeExpense,
+                  value: report.totalExpense,
+                  color: AppColors.danger,
                 ),
-              ],
+              ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: AppSpacing.md),
+        SectionCard(
+          variant: SectionCardVariant.neutral,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                AppLocalizations.of(context).homeBalance,
+                style: context.textTheme.bodyLarge,
+              ),
+              Text(
+                Formatters.formatMoney(report.net),
+                style: context.textTheme.titleLarge?.copyWith(
+                  color: context.colors.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -268,7 +273,7 @@ class ReportsScreen extends ConsumerWidget {
         Text(label, style: context.textTheme.bodySmall),
         const SizedBox(height: 4),
         Text(
-          Formatters.formatCurrency(value, decimals: 0),
+          Formatters.formatMoney(value),
           style: context.textTheme.titleMedium?.copyWith(
             color: color,
             fontWeight: FontWeight.w600,
@@ -333,30 +338,27 @@ class ReportsScreen extends ConsumerWidget {
 
         if (insights.isEmpty) return const SizedBox.shrink();
 
-        return Card(
-          color: context.colors.primaryContainer.withValues(alpha: 0.3),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.lightbulb_outline,
-                        size: 18, color: context.colors.primary),
-                    const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      AppLocalizations.of(context).reportsInsightTitle,
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: context.colors.primary,
-                      ),
+        return SectionCard(
+          variant: SectionCardVariant.insight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Icon(Icons.lightbulb_outline,
+                      size: 18, color: context.colors.primary),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    AppLocalizations.of(context).reportsInsightTitle,
+                    style: context.textTheme.titleSmall?.copyWith(
+                      color: context.colors.primary,
                     ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                ...insights,
-              ],
-            ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              ...insights,
+            ],
           ),
         );
       },

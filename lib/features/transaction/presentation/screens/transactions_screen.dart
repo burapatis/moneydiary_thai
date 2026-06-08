@@ -5,6 +5,7 @@ import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_helpers.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/section_card.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../domain/entities/transaction.dart';
 import '../providers/transaction_providers.dart';
@@ -95,8 +96,12 @@ class TransactionsScreen extends ConsumerWidget {
       ..sort((DateTime a, DateTime b) => b.compareTo(a)); // DESC
 
     return ListView.builder(
-      // ใส่ padding ด้านล่างเผื่อ FAB บัง
-      padding: const EdgeInsets.only(bottom: 100),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.md,
+        AppSpacing.sm,
+        AppSpacing.md,
+        100,
+      ),
       itemCount: sortedDays.length,
       itemBuilder: (BuildContext ctx, int i) {
         final DateTime day = sortedDays[i];
@@ -114,41 +119,49 @@ class TransactionsScreen extends ConsumerWidget {
         }
         final double dayNet = dayIncome - dayExpense;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            // Date header
-            Padding(
-              padding: const EdgeInsets.only(
-                left: AppSpacing.md,
-                right: AppSpacing.md,
-                top: AppSpacing.md,
-                bottom: AppSpacing.xs,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      Formatters.formatRelativeDateTh(day),
-                      style: context.textTheme.labelLarge,
-                    ),
+        return Padding(
+          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+          child: SectionCard(
+            variant: SectionCard.variantAtIndex(i),
+            padding: EdgeInsets.zero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: AppSpacing.md,
+                    right: AppSpacing.md,
+                    top: AppSpacing.md,
+                    bottom: AppSpacing.xs,
                   ),
-                  Text(
-                    dayNet >= 0
-                        ? '+${Formatters.formatCurrency(dayNet, decimals: 0)}'
-                        : Formatters.formatCurrency(dayNet, decimals: 0),
-                    style: context.textTheme.labelMedium,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          Formatters.formatRelativeDateTh(day),
+                          style: context.textTheme.labelLarge,
+                        ),
+                      ),
+                      Text(
+                        dayNet >= 0
+                            ? '+${Formatters.formatMoney(dayNet)}'
+                            : Formatters.formatMoney(dayNet),
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: context.colors.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                ...dayTxs.map((Transaction tx) => TransactionListItem(
+                      transaction: tx,
+                      onTap: () => _onTxTap(ctx, tx),
+                    )),
+                const SizedBox(height: AppSpacing.sm),
+              ],
             ),
-            // Items
-            ...dayTxs.map((Transaction tx) => TransactionListItem(
-                  transaction: tx,
-                  onTap: () => _onTxTap(ctx, tx),
-                )),
-            const Divider(height: AppSpacing.md),
-          ],
+          ),
         );
       },
     );

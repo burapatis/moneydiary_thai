@@ -5,6 +5,7 @@ import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/section_card.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../../transaction/domain/entities/transaction.dart';
 import '../../../transaction/domain/repositories/transaction_repository.dart';
@@ -44,12 +45,13 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.sm),
 
             todaySummaryAsync.when(
-              data: (TransactionSummary s) => Text(
-                Formatters.formatCurrency(s.net),
-                style: context.textTheme.displayLarge?.copyWith(
-                  color: s.net >= 0
-                      ? AppColors.success
-                      : context.colors.onSurface,
+              data: (TransactionSummary s) => SectionCard(
+                variant: SectionCardVariant.primary,
+                child: Text(
+                  Formatters.formatMoney(s.net),
+                  style: context.textTheme.displayLarge?.copyWith(
+                    color: context.colors.onSurface,
+                  ),
                 ),
               ),
               loading: () => const _LoadingPlaceholder(),
@@ -66,6 +68,7 @@ class HomeScreen extends ConsumerWidget {
                     child: _SummaryCard(
                       label: l10n.homeIncome,
                       amount: s.income,
+                      variant: SectionCardVariant.income,
                       color: AppColors.success,
                       icon: Icons.arrow_downward,
                     ),
@@ -75,6 +78,7 @@ class HomeScreen extends ConsumerWidget {
                     child: _SummaryCard(
                       label: l10n.homeExpense,
                       amount: s.expense,
+                      variant: SectionCardVariant.expense,
                       color: AppColors.danger,
                       icon: Icons.arrow_upward,
                     ),
@@ -93,35 +97,30 @@ class HomeScreen extends ConsumerWidget {
 
             monthSummaryAsync.when(
               data: (TransactionSummary s) {
-                return Card(
-                  color: context.colors.surfaceContainerHighest,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        _MonthRow(
-                          label: l10n.homeIncome,
-                          amount: s.income,
-                          color: AppColors.success,
-                        ),
-                        const Divider(),
-                        _MonthRow(
-                          label: l10n.homeExpense,
-                          amount: s.expense,
-                          color: AppColors.danger,
-                        ),
-                        const Divider(),
-                        _MonthRow(
-                          label: l10n.homeBalance,
-                          amount: s.net,
-                          color: s.net >= 0
-                              ? AppColors.success
-                              : AppColors.danger,
-                          bold: true,
-                        ),
-                      ],
-                    ),
+                return SectionCard(
+                  variant: SectionCardVariant.info,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _MonthRow(
+                        label: l10n.homeIncome,
+                        amount: s.income,
+                        color: AppColors.success,
+                      ),
+                      const Divider(),
+                      _MonthRow(
+                        label: l10n.homeExpense,
+                        amount: s.expense,
+                        color: AppColors.danger,
+                      ),
+                      const Divider(),
+                      _MonthRow(
+                        label: l10n.homeBalance,
+                        amount: s.net,
+                        color: context.colors.onSurface,
+                        bold: true,
+                      ),
+                    ],
                   ),
                 );
               },
@@ -143,11 +142,11 @@ class HomeScreen extends ConsumerWidget {
                       style: context.textTheme.titleMedium,
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    Card(
-                      color: context.colors.surfaceContainerHighest,
+                    SectionCard(
+                      variant: SectionCardVariant.neutral,
                       child: Column(
                         children: txs
-                            .take(5) // 5 อันล่าสุดของวันนี้
+                            .take(5)
                             .map((Transaction tx) => TransactionListItem(
                                   transaction: tx,
                                   onTap: () => QuickAddSheet.show(
@@ -204,38 +203,37 @@ class _SummaryCard extends StatelessWidget {
   const _SummaryCard({
     required this.label,
     required this.amount,
+    required this.variant,
     required this.color,
     required this.icon,
   });
 
   final String label;
   final double amount;
+  final SectionCardVariant variant;
   final Color color;
   final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: context.colors.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Icon(icon, size: 16, color: color),
-                const SizedBox(width: AppSpacing.xs),
-                Text(label, style: context.textTheme.bodySmall),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              Formatters.formatCurrency(amount),
-              style: context.textTheme.titleLarge?.copyWith(color: color),
-            ),
-          ],
-        ),
+    return SectionCard(
+      variant: variant,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(icon, size: 16, color: color),
+              const SizedBox(width: AppSpacing.xs),
+              Text(label, style: context.textTheme.bodySmall),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            Formatters.formatMoney(amount),
+            style: context.textTheme.titleLarge?.copyWith(color: color),
+          ),
+        ],
       ),
     );
   }
@@ -268,7 +266,7 @@ class _MonthRow extends StatelessWidget {
             ),
           ),
           Text(
-            Formatters.formatCurrency(amount),
+            Formatters.formatMoney(amount),
             style: context.textTheme.titleMedium?.copyWith(
               color: color,
               fontWeight: bold ? FontWeight.w700 : FontWeight.w600,
